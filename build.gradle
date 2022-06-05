@@ -41,6 +41,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     // providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-core
+    implementation group: 'org.apache.activemq', name: 'activemq-core', version: '5.7.0'
+// https://mvnrepository.com/artifact/org.springframework/spring-jms
+    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.20'
+
 }
 
 tasks.named('test') {
