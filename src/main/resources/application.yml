@@ -12,5 +12,10 @@ spring:
   profiles:
     active: dev
 
+# ActiveMQ
+activemq:
+  broker:
+    url: tcp://localhost:61616
+
 
 
