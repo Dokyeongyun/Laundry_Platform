@@ -8,4 +8,14 @@
          WHERE member_id = #{memberId}
     </select>
 
+    <insert id="insert"
+            parameterType="MemberEntity"
+            useGeneratedKeys="true"
+            keyProperty="memberId"
+            keyColumn="member_id">
+        INSERT INTO member (phone_num, password, nickname, birthday, gender)
+        VALUES (#{phoneNum}, #{password}, #{nickname}, #{birthday}, #{gender});
+    </insert>
+
+
 </mapper>

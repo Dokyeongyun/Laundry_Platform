@@ -1,0 +1,53 @@
+package com.coders.laundry.repository;
+
+import com.coders.laundry.domain.entity.MemberEntity;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+@ActiveProfiles("dev")
+class MemberRepositoryTest {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Test
+    void selectById() {
+    }
+
+    @Test
+    void insert() {
+        // Arrange
+        MemberEntity expected = MemberEntity.builder()
+                .phoneNum("01047504911")
+                .password("1234567890")
+                .nickname("ㅇㅇㅇ")
+                .birthday(LocalDate.of(1998, 8, 3))
+                .gender("F")
+                .build();
+
+        // Act
+        int result = memberRepository.insert(expected);
+
+        // Assert
+        assertEquals(1, result);
+
+        int id = expected.getMemberId();
+        MemberEntity actual = memberRepository.selectById(id);
+        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
+        assertEquals(expected.getPassword(), actual.getPassword());
+        assertEquals(expected.getNickname(), actual.getNickname());
+        assertEquals(expected.getBirthday(), actual.getBirthday());
+        assertEquals(expected.getGender(), actual.getGender());
+        assertFalse(actual.isAutoLoginYn());
+        assertNotNull(actual.getJoinDate());
+        assertNull(actual.getWithdrawalDate());
+
+    }
+}
