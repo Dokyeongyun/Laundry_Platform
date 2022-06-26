@@ -31,4 +31,11 @@
         WHERE member_id = #{memberId};
     </update>
 
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM member
+         WHERE member_id = #{memberId}
+    </delete>
+
 </mapper>

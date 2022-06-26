@@ -66,4 +66,30 @@ class MemberRepositoryTest {
         assertEquals(1, result);
         assertEquals("도이소",member.getNickname());
     }
+
+    @Test
+    void delete(){
+        //Arrange
+        MemberEntity member = MemberEntity.builder()
+                .phoneNum("01012342222")
+                .password("12345yuin25")
+                .nickname("땡땡땡")
+                .birthday(LocalDate.of(1998, 8,3))
+                .gender("F")
+                .build();
+
+        int insertedCount = memberRepository.insert(member);
+        assertEquals(1, insertedCount);
+
+        int generatedMemberId = member.getMemberId();
+
+        //Act
+        int result = memberRepository.delete(generatedMemberId);
+
+        //Assert
+        assertEquals(1, result);
+        MemberEntity deleted = memberRepository.selectById(generatedMemberId);
+        assertNull(deleted);
+    }
+
 }
