@@ -50,4 +50,20 @@ class MemberRepositoryTest {
         assertNull(actual.getWithdrawalDate());
 
     }
+
+    @Test
+    void update(){
+        // Arrange
+        MemberEntity member = memberRepository.selectById(3);
+
+        member.setNickname("도경윤"); //사전 세팅
+        member.setNickname("도이소"); //닉네임 변경(업데이트)
+
+        // Act
+        int result = memberRepository.update(member);
+
+        // Assert
+        assertEquals(1, result);
+        assertEquals("도이소",member.getNickname());
+    }
 }

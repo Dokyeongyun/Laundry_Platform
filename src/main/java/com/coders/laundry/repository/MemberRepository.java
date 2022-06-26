@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository {
     MemberEntity selectById(int memberId);
     int insert(MemberEntity memberEntity);
+    int update(MemberEntity memberEntity);
 }

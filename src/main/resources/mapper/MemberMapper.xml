@@ -17,5 +17,18 @@
         VALUES (#{phoneNum}, #{password}, #{nickname}, #{birthday}, #{gender});
     </insert>
 
+    <update id="update"
+            parameterType="MemberEntity"
+            useGeneratedKeys="true"
+            keyProperty="memberId"
+            keyColumn="member_id">
+        UPDATE member
+           SET phone_num = #{phoneNum},
+               password = #{password},
+               nickname = #{nickname},
+               birthday = #{birthday},
+               gender = #{gender}
+        WHERE member_id = #{memberId};
+    </update>
 
 </mapper>
