@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.LaundryRepository">
+    <insert id="insert"
+            parameterType="LaundryEntity"
+            useGeneratedKeys="true"
+            keyProperty="laundryId"
+            keyColumn="laundry_id">
+        INSERT INTO laundry (
+               name, jibun_address, jibun_address_detail,
+               doro_address, doro_address_detail,
+               latitude, longitude, partnership
+        ) VALUES (
+               #{name}, #{jibunAddress}, #{jibunAddressDetail},
+               #{doroAddress}, #{doroAddressDetail},
+               #{latitude}, #{longitude}, #{partnership}
+        );
+    </insert>
+
+    <select id="selectById" parameterType="int" resultType="LaundryEntity">
+        SELECT laundry_id, name, jibun_address, jibun_address_detail,
+               doro_address, doro_address_detail,
+               latitude, longitude, partnership
+          FROM laundry
+         WHERE laundry_id = #{laundryId};
+    </select>
+
+    <update id="update"
+            parameterType="LaundryEntity"
+            useGeneratedKeys="true"
+            keyProperty="laundryId"
+            keyColumn="laundry_id">
+        UPDATE laundry
+           SET name = #{name},
+               jibun_address = #{jibunAddress},
+               jibun_address_detail = #{jibunAddressDetail},
+               doro_address = #{doroAddress},
+               doro_address_detail = #{doroAddressDetail},
+               latitude = #{latitude},
+               longitude = #{longitude},
+               partnership = #{partnership}
+         WHERE laundry_id = #{laundryId}
+    </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM laundry
+         WHERE laundry_id = #{laundryId}
+    </delete>
+
+    <select id="selectAll" resultType="LaundryEntity">
+        SELECT laundry_id, name, jibun_address, jibun_address_detail,
+               doro_address, doro_address_detail,
+               latitude, longitude, partnership
+          FROM laundry
+    </select>
+</mapper>

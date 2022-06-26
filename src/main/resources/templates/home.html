@@ -10,12 +10,28 @@
 <table>
     <tbody>
     <tr>
-        <th colspan="5"> Members </th>
+        <th> Members</th>
     </tr>
     <tr>
-        <td th:each="coder : ${coders}">
-            <span th:text="${coder}"></span>
+        <td width="10%"><span>회원번호</span></td>
+        <td width="20%"><span>휴대폰번호</span></td>
+        <td width="10%"><span>닉네임</span></td>
+        <td width="20%"><span>생년월일</span></td>
+        <td width="10%"><span>성별</span></td>
+        <td width="10%"><span>자동로그인 여부</span></td>
+        <td width="20%"><span>가입일자</span></td>
+    </tr>
+    <tr th:each="coder : ${coders}">
+        <td><span th:text="${coder.memberId}"></span></td>
+        <td><span th:text="${coder.phoneNum}"></span></td>
+        <td><span th:text="${coder.nickname}"></span></td>
+        <td><span th:text="${#temporals.format(coder.birthday, 'yyyy-MM-dd')}"></span></td>
+        <td>
+            <span th:if="${coder.gender.equals('M')}">남</span>
+            <span th:if="${coder.gender.equals('F')}">여</span>
         </td>
+        <td><span th:text="${coder.autoLoginYn}"></span></td>
+        <td><span th:text="${#temporals.format(coder.joinDate, 'yyyy-MM-dd HH:mm:ss')}"></span></td>
     </tr>
     </tbody>
 </table>
