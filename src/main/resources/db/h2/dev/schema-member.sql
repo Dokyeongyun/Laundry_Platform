@@ -26,8 +26,8 @@ CREATE TABLE laundry_visit_history(
 
 CREATE TABLE laundry_like(
         PRIMARY KEY(laundry_like_id),
-        laundry_like_id   INT     NOT NULL AUTO_INCREMENT,
-        member_id         INT     NOT NULL,
-        laundry_id        INT     NOT NULL,
-        like_date         INT     NOT NULL DEFAULT CURRENT_TIMESTAMP
+        laundry_like_id   INT         NOT NULL AUTO_INCREMENT,
+        member_id         INT         NOT NULL,
+        laundry_id        INT         NOT NULL,
+        like_date         TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
