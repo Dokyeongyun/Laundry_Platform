@@ -7,4 +7,12 @@
         INSERT INTO laundry_like(member_id, laundry_id)
         VALUES (#{memberId}, #{laundryId});
     </insert>
+
+    <select id="selectById"
+            parameterType="int"
+            resultType="LaundryLikeEntity">
+        SELECT laundry_like_id, member_id, laundry_id, like_date
+          FROM laundry_like
+         WHERE laundry_like_id = #{laundryLikeId}
+    </select>
 </mapper>
