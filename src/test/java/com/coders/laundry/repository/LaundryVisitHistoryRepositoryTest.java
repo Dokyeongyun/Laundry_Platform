@@ -29,4 +29,16 @@ class LaundryVisitHistoryRepositoryTest {
         assertEquals(1, result);
 
     }
+
+    @Test
+    void selectById(){
+        //Arrange
+        LaundryVisitHistoryEntity result = laundryVisitHistoryRepository.selectById(1);
+
+        //Assert
+        assertEquals(1, result.getLaundryId());
+        assertEquals(1, result.getFacilityId());
+        assertEquals(1, result.getMemberId());
+        assertNotNull(result.getVisitDate());
+    }
 }

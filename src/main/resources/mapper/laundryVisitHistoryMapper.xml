@@ -9,4 +9,12 @@
         INSERT INTO laundry_visit_history(laundry_id, facility_id, member_id)
         VALUES (#{laundryId}, #{facilityId}, #{memberId});
     </insert>
+
+    <select id="selectById"
+            parameterType="int"
+            resultType="LaundryVisitHistoryEntity">
+        SELECT visit_history_seq, laundry_id, facility_id, member_id, visit_date
+          FROM laundry_visit_history
+         WHERE visit_history_seq = #{visitHistorySeq};
+    </select>
 </mapper>

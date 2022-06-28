@@ -18,3 +18,6 @@ VALUES ('01066666666', 'test', '조만기', '19950101', 'M');
 
 INSERT INTO member (phone_num, password, nickname, birthday, gender)
 VALUES ('01077777777', 'test', '황신지', '19960101', 'F');
+
+INSERT INTO laundry_visit_history (laundry_id, facility_id, member_id)
+VALUES (1, 1, 1);
