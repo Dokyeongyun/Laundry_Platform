@@ -17,4 +17,16 @@
           FROM laundry_visit_history
          WHERE visit_history_seq = #{visitHistorySeq};
     </select>
+
+    <update id="update"
+            parameterType="LaundryVisitHistoryEntity"
+            useGeneratedKeys="true"
+            keyProperty="visitHistorySeq"
+            keyColumn="visit_history_seq">
+        UPDATE laundry_visit_history
+           SET laundry_id = #{laundryId},
+               facility_id = #{facilityId},
+               member_id = #{memberId}
+         WHERE visit_history_seq = #{visitHistorySeq};
+    </update>
 </mapper>

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface LaundryVisitHistoryRepository {
     int insert(LaundryVisitHistoryEntity laundryVisitHistory);
     LaundryVisitHistoryEntity selectById(@Param("visitHistorySeq")int visitHistorySeq);
+    int update(LaundryVisitHistoryEntity laundryVisitHistoryEntity);
 }

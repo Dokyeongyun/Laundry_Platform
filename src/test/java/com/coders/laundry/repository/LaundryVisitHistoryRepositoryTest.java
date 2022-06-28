@@ -47,4 +47,19 @@ class LaundryVisitHistoryRepositoryTest {
         assertEquals(1, result.getMemberId());
         assertNotNull(result.getVisitDate());
     }
+
+    @Test
+    void update(){
+        //Arrange
+        LaundryVisitHistoryEntity laundryVisitHistoryEntity = laundryVisitHistoryRepository.selectById(1);
+        // 이용시설 번호 변경
+        laundryVisitHistoryEntity.setFacilityId(2);
+
+        //Act
+        int result = laundryVisitHistoryRepository.update(laundryVisitHistoryEntity);
+
+        //Assert
+        assertEquals(1, result);
+        assertEquals(2, laundryVisitHistoryEntity.getFacilityId());
+    }
 }
