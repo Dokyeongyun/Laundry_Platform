@@ -47,4 +47,19 @@ class LaundryLikeRepositoryTest {
         assertEquals(1, like.getLaundryId());
         assertNotNull(like.getLikeDate());
     }
+
+    @Test
+    void update(){
+        //Arrange
+        LaundryLikeEntity laundryLikeEntity = laundryLikeRepository.selectById(1);
+
+        laundryLikeEntity.setMemberId(3);
+
+        int result = laundryLikeRepository.update(laundryLikeEntity);
+
+        assertEquals(1, result);
+        int id = laundryLikeEntity.getLaundryLikeId();
+        LaundryLikeEntity actual = laundryLikeRepository.selectById(id);
+        assertEquals(laundryLikeEntity, actual);
+    }
 }

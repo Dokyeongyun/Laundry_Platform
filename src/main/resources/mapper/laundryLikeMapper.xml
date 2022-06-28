@@ -15,4 +15,14 @@
           FROM laundry_like
          WHERE laundry_like_id = #{laundryLikeId}
     </select>
+
+    <update id="update"
+            parameterType="LaundryLikeEntity"
+            keyProperty="laundryLikeId"
+            keyColumn="laundry_like_id">
+        UPDATE laundry_like
+           SET member_id = #{memberId},
+               laundry_id = #{laundryId}
+         WHERE laundry_like_id = #{laundryLikeId}
+    </update>
 </mapper>
