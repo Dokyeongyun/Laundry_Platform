@@ -25,4 +25,11 @@
                laundry_id = #{laundryId}
          WHERE laundry_like_id = #{laundryLikeId}
     </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM laundry_like
+         WHERE laundry_like_id = #{laundryLikeId}
+    </delete>
 </mapper>

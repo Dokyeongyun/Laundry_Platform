@@ -11,4 +11,5 @@ public interface LaundryLikeRepository {
     int insert(LaundryLikeEntity laundryLikeEntity);
     LaundryLikeEntity selectById(@Param("laundryLikeId") int laundryLikeId);
     int update(LaundryLikeEntity laundryLikeEntity);
+    int delete(@Param("laundryLikeId")int laundryLikeId);
 }

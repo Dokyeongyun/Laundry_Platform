@@ -62,4 +62,23 @@ class LaundryLikeRepositoryTest {
         LaundryLikeEntity actual = laundryLikeRepository.selectById(id);
         assertEquals(laundryLikeEntity, actual);
     }
+
+    @Test
+    void delete(){
+        //Arrange
+        LaundryLikeEntity laundryLikeEntity = LaundryLikeEntity.builder()
+                .memberId(5)
+                .laundryId(1)
+                .build();
+
+        int insertCount = laundryLikeRepository.insert(laundryLikeEntity);
+        assertEquals(1, insertCount);
+
+        int id = laundryLikeEntity.getLaundryLikeId();
+
+        //Act
+        int result = laundryLikeRepository.delete(id);
+        assertEquals(1, result);// result가 0으로 test 실패.
+        assertNull(laundryLikeRepository.selectById(id));
+    }
 }
