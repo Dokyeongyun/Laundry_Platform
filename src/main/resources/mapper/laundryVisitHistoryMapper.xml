@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.LaundryVisitHistoryRepository">
+    <insert id="insert"
+            parameterType="LaundryVisitHistoryEntity"
+            useGeneratedKeys="true"
+            keyProperty="visitHistorySeq"
+            keyColumn="visit_history_seq">
+        INSERT INTO laundry_visit_history(laundry_id, facility_id, member_id)
+        VALUES (#{laundryId}, #{facilityId}, #{memberId});
+    </insert>
+</mapper>
