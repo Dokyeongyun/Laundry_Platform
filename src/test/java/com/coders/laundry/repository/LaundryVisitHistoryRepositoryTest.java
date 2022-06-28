@@ -16,17 +16,23 @@ class LaundryVisitHistoryRepositoryTest {
     @Test
     void insert() {
         //Arrange
-        LaundryVisitHistoryEntity laundryVisitHistoryEntity = LaundryVisitHistoryEntity.builder()
+        LaundryVisitHistoryEntity expected = LaundryVisitHistoryEntity.builder()
                 .laundryId(1)
                 .facilityId(1)
                 .memberId(1)
                 .build();
 
         //Act
-        int result = laundryVisitHistoryRepository.insert(laundryVisitHistoryEntity);
+        int result = laundryVisitHistoryRepository.insert(expected);
 
         //Assert
         assertEquals(1, result);
+        int id =expected.getVisitHistorySeq();
+        LaundryVisitHistoryEntity actual = laundryVisitHistoryRepository.selectById(id);
+        assertEquals(expected.getLaundryId(), actual.getLaundryId());
+        assertEquals(expected.getFacilityId(), actual.getFacilityId());
+        assertEquals(expected.getMemberId(), actual.getMemberId());
+        assertNotNull(actual.getVisitDate());
 
     }
 
