@@ -11,4 +11,5 @@ public interface LaundryVisitHistoryRepository {
     int insert(LaundryVisitHistoryEntity laundryVisitHistory);
     LaundryVisitHistoryEntity selectById(@Param("visitHistorySeq")int visitHistorySeq);
     int update(LaundryVisitHistoryEntity laundryVisitHistoryEntity);
+    int delete(@Param("visitHistorySeq")int visitHistorySeq);
 }

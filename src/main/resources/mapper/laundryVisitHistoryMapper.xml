@@ -29,4 +29,11 @@
                member_id = #{memberId}
          WHERE visit_history_seq = #{visitHistorySeq};
     </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM laundry_visit_history
+         WHERE visit_history_seq = #{visitHistorySeq}
+    </delete>
 </mapper>

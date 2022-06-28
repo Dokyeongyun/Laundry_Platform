@@ -62,4 +62,24 @@ class LaundryVisitHistoryRepositoryTest {
         assertEquals(1, result);
         assertEquals(2, laundryVisitHistoryEntity.getFacilityId());
     }
+
+    @Test
+    void delete(){
+        //Arrange
+        LaundryVisitHistoryEntity laundryVisitHistoryEntity = LaundryVisitHistoryEntity.builder()
+                .laundryId(1)
+                .facilityId(2)
+                .memberId(4)
+                .build();
+
+        int insertCount = laundryVisitHistoryRepository.insert(laundryVisitHistoryEntity);
+        assertEquals(1, insertCount);
+
+        int id = laundryVisitHistoryEntity.getVisitHistorySeq();
+
+        //Act
+        int result = laundryVisitHistoryRepository.delete(id);
+        assertEquals(1, result);
+        assertNull(laundryVisitHistoryRepository.selectById(id));
+    }
 }
