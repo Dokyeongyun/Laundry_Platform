@@ -26,18 +26,21 @@ class LaundryLikeRepositoryTest {
 
         //Assert
         assertEquals(1, result);
-        //실제값이랑 비교하는 건 selectById 만든 후에 추가할 예정.
+        int id = expected.getLaundryLikeId();
+        LaundryLikeEntity actual = laundryLikeRepository.selectById(id);
+        assertEquals(expected.getMemberId(), actual.getMemberId());
+        assertEquals(expected.getLaundryId(), actual.getLaundryId());
+        assertNotNull(actual.getLikeDate());
     }
 
     @Test
     void selectById() {
-        //사전세팅: member_id = 1, laundry_id = 1인 LaundryLikeEntity 한 개 생성
         LaundryLikeEntity expected = LaundryLikeEntity.builder()
                 .memberId(1)
                 .laundryId(1)
                 .build();
 
-        laundryLikeRepository.insert(expected); //laundry_like테이블에 삽입.
+        laundryLikeRepository.insert(expected);
 
         //Act
         LaundryLikeEntity like =laundryLikeRepository.selectById(1);
@@ -84,7 +87,7 @@ class LaundryLikeRepositoryTest {
 
         //Act
         int result = laundryLikeRepository.delete(id);
-        assertEquals(1, result);// result가 0으로 test 실패.
+        assertEquals(1, result);
         assertNull(laundryLikeRepository.selectById(id));
     }
 }
