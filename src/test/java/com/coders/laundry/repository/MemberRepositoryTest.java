@@ -79,17 +79,25 @@ class MemberRepositoryTest {
     @Test
     void update(){
         // Arrange
-        MemberEntity member = memberRepository.selectById(3);
-        String original = member.getNickname();
-        member.setNickname("도경아");
+        MemberEntity member = MemberEntity.builder()
+                .phoneNum("1234123412")
+                .password("test")
+                .nickname("update")
+                .birthday(LocalDate.of(1998, 3, 3))
+                .gender("M")
+                .build();
+        int insertCount = memberRepository.insert(member);
+        assertEquals(1, insertCount);
 
-        // Act
+
+        member.setBirthday(LocalDate.of(1998, 3,4));
+
+        //Act
         int result = memberRepository.update(member);
 
         // Assert
         assertEquals(1, result);
-        assertEquals("도경아",member.getNickname());
-        assertNotEquals(original, member.getNickname());
+        assertEquals(LocalDate.of(1998, 3,4), member.getBirthday());
     }
 
     @Test
