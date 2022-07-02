@@ -51,16 +51,22 @@ class LaundryLikeRepositoryTest {
     @Test
     void update(){
         //Arrange
-        LaundryLikeEntity laundryLikeEntity = laundryLikeRepository.selectById(1);
+        LaundryLikeEntity laundryLikeEntity = LaundryLikeEntity.builder()
+                .memberId(1)
+                .laundryId(1)
+                .build();
+        int insertCount = laundryLikeRepository.insert(laundryLikeEntity);
+        assertEquals(1, insertCount);
 
-        laundryLikeEntity.setMemberId(3);
+        laundryLikeEntity.setLaundryId(3);
 
+        //Act
         int result = laundryLikeRepository.update(laundryLikeEntity);
 
         assertEquals(1, result);
         int id = laundryLikeEntity.getLaundryLikeId();
         LaundryLikeEntity actual = laundryLikeRepository.selectById(id);
-        assertEquals(laundryLikeEntity, actual);
+        assertEquals(3, actual.getLaundryId());
     }
 
     @Test
