@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +20,18 @@ class MemberRepositoryTest {
 
     @Test
     void selectById() {
+        //Act
+        MemberEntity memberEntity = memberRepository.selectById(1);
+
+        //Assert
+        assertEquals("01011111111", memberEntity.getPhoneNum());
+        assertEquals("test", memberEntity.getPassword());
+        assertEquals("김병주", memberEntity.getNickname());
+        assertEquals(LocalDate.of(1998,1,1), memberEntity.getBirthday());
+        assertEquals("M", memberEntity.getGender());
+        assertFalse(memberEntity.isAutoLoginYn());
+        assertNotNull(memberEntity.getJoinDate());
+        assertNull(memberEntity.getWithdrawalDate());
     }
 
     @Test
