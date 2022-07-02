@@ -20,3 +20,5 @@ INSERT INTO member (phone_num, password, nickname, birthday, gender)
 VALUES ('01077777777', 'test', '황신지', '19960101', 'F');
 
 INSERT INTO laundry_like (member_id, laundry_id) VALUES (1, 1);
+
+INSERT INTO laundry_visit_history (laundry_id, facility_id, member_id) VALUES (1, 1, 1);

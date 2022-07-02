@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.LaundryVisitHistoryRepository">
+    <insert id="insert"
+            parameterType="LaundryVisitHistoryEntity"
+            useGeneratedKeys="true"
+            keyProperty="visitHistorySeq"
+            keyColumn="visit_history_seq">
+        INSERT INTO laundry_visit_history(laundry_id, facility_id, member_id)
+        VALUES (#{laundryId}, #{facilityId}, #{memberId});
+    </insert>
+
+    <select id="selectById"
+            parameterType="int"
+            resultType="LaundryVisitHistoryEntity">
+        SELECT visit_history_seq, laundry_id, facility_id, member_id, visit_date
+          FROM laundry_visit_history
+         WHERE visit_history_seq = #{visitHistorySeq};
+    </select>
+
+    <update id="update"
+            parameterType="LaundryVisitHistoryEntity"
+            useGeneratedKeys="true"
+            keyProperty="visitHistorySeq"
+            keyColumn="visit_history_seq">
+        UPDATE laundry_visit_history
+           SET laundry_id = #{laundryId},
+               facility_id = #{facilityId},
+               member_id = #{memberId}
+         WHERE visit_history_seq = #{visitHistorySeq};
+    </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM laundry_visit_history
+         WHERE visit_history_seq = #{visitHistorySeq}
+    </delete>
+</mapper>

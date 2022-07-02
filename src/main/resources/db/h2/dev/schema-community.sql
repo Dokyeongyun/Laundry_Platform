@@ -13,7 +13,7 @@ CREATE TABLE post (
         contents    VARCHAR(300) NOT NULL,
         create_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
         like_num    INT          NOT NULL DEFAULT 0,
-        update_date DATE
+        update_date DATETIME
 );
 
 CREATE TABLE comment (
@@ -24,7 +24,7 @@ CREATE TABLE comment (
         contents     VARCHAR(300) NOT NULL,
         create_date  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
         like_num     INT          NOT NULL DEFAULT 0,
-        update_date  DATE
+        update_date  DATETIME
 );
 
 CREATE TABLE reply (
@@ -35,7 +35,7 @@ CREATE TABLE reply (
         contents     VARCHAR(300) NOT NULL,
         create_date  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
         like_num     INT          NOT NULL DEFAULT 0,
-        update_date  DATE
+        update_date  DATETIME
 );
 
 CREATE TABLE review (
@@ -47,7 +47,7 @@ CREATE TABLE review (
         contents     VARCHAR(300)   NOT NULL,
         create_date  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
         like_num     INT            NOT NULL DEFAULT 0,
-        update_date  DATE
+        update_date  DATETIME
 );
 
 CREATE TABLE category (

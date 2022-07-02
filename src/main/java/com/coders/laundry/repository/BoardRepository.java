@@ -12,6 +12,10 @@ import java.util.List;
 @Repository
 public interface BoardRepository {
     List<CategoryEntity> categoryList();
-    List<PostEntity> selectHotPost();
-    //List<PostEntity> selectSpecificCategoryPost(int categoryId);
+    List<PostEntity> selectHotPosts();
+    List<PostEntity> selectSpecificCategoryPosts(int categoryId);
+    int writePost(PostEntity post);
+    PostEntity selectById(int postId);
+    int updatePost(PostEntity post);
+    int deletePost(int postId);
 }
