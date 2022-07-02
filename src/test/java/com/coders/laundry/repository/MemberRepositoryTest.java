@@ -20,18 +20,30 @@ class MemberRepositoryTest {
 
     @Test
     void selectById() {
+        //Arrange
+        MemberEntity expected = MemberEntity.builder()
+                .phoneNum("12341234")
+                .password("test")
+                .nickname("연습")
+                .birthday(LocalDate.of(1998,2,2))
+                .gender("F")
+                .build();
+
+        int insertCount = memberRepository.insert(expected);
+        assertEquals(1, insertCount);
+
         //Act
-        MemberEntity memberEntity = memberRepository.selectById(1);
+        MemberEntity actual = memberRepository.selectById(expected.getMemberId());
 
         //Assert
-        assertEquals("01011111111", memberEntity.getPhoneNum());
-        assertEquals("test", memberEntity.getPassword());
-        assertEquals("김병주", memberEntity.getNickname());
-        assertEquals(LocalDate.of(1998,1,1), memberEntity.getBirthday());
-        assertEquals("M", memberEntity.getGender());
-        assertFalse(memberEntity.isAutoLoginYn());
-        assertNotNull(memberEntity.getJoinDate());
-        assertNull(memberEntity.getWithdrawalDate());
+        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
+        assertEquals(expected.getPassword(), actual.getPassword());
+        assertEquals(expected.getNickname(), actual.getNickname());
+        assertEquals(expected.getBirthday(), actual.getBirthday());
+        assertEquals(expected.getGender(), actual.getGender());
+        assertFalse(actual.isAutoLoginYn());
+        assertNotNull(actual.getJoinDate());
+        assertNull(actual.getWithdrawalDate());
     }
 
     @Test
