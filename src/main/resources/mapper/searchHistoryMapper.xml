@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.SearchHistoryRepository">
+    <insert id="insert"
+            parameterType="SearchHistoryEntity"
+            useGeneratedKeys="true"
+            keyProperty="searchHistoryId"
+            keyColumn="search_history_id">
+        INSERT INTO search_history (keyword, type, search_member_id)
+        VALUES (#{keyword}, #{type},#{searchMemberId});
+    </insert>
+
+    <select id="selectById"
+            parameterType="int"
+            resultType="SearchHistoryEntity">
+        SELECT search_history_id, keyword, type, search_member_id, create_date
+          FROM search_history
+         WHERE search_history_id = #{searchHistoryId};
+    </select>
+</mapper>
