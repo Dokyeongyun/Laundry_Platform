@@ -17,4 +17,11 @@
           FROM search_history
          WHERE search_history_id = #{searchHistoryId};
     </select>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM search_history
+         WHERE search_history_id = #{searchHistoryId}
+    </delete>
 </mapper>

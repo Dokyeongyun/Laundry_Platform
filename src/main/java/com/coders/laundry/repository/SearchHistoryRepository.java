@@ -11,4 +11,6 @@ public interface SearchHistoryRepository {
     int insert(SearchHistoryEntity searchHistory);
 
     SearchHistoryEntity selectById(@Param("searchHistoryId") int searchHistoryId);
+
+    int delete(@Param("searchHistoryId") int searchHistoryId);
 }
