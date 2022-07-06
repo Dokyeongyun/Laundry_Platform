@@ -22,11 +22,17 @@
             parameterType="int">
         DELETE
           FROM search_history
-         WHERE search_history_id = #{searchHistoryId}
+         WHERE search_history_id = #{searchHistoryId};
     </delete>
 
     <select id="selectAll" resultType="SearchHistoryEntity">
         SELECT search_history_id, keyword, type, search_member_id, create_date
+          FROM search_history;
+    </select>
+
+    <select id="selectAllByMemberId" resultType="SearchHistoryEntity">
+        SELECT search_history_id, keyword, type, search_member_id, create_date
           FROM search_history
+         WHERE search_member_id = #{searchMemberId};
     </select>
 </mapper>

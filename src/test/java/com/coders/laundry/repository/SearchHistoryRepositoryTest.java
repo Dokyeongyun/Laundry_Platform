@@ -97,4 +97,20 @@ class SearchHistoryRepositoryTest {
         // Assert
         assertNotNull(result);
     }
+
+    @Test
+    void selectAllByMemberId() {
+        // Arrange
+        int searchMemberId = 1;
+
+        // Act
+        List<SearchHistoryEntity> result = searchHistoryRepository.selectAllByMemberId(searchMemberId);
+
+        // Assert
+        assertNotNull(result);
+        for(SearchHistoryEntity entity : result) {
+            assertEquals(searchMemberId, entity.getSearchMemberId());
+        }
+
+    }
 }

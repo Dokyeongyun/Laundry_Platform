@@ -17,4 +17,6 @@ public interface SearchHistoryRepository {
     int delete(@Param("searchHistoryId") int searchHistoryId);
 
     List<SearchHistoryEntity> selectAll();
+
+    List<SearchHistoryEntity> selectAllByMemberId(@Param("searchMemberId") int searchMemberId);
 }
