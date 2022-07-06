@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface SearchHistoryRepository {
@@ -13,4 +15,6 @@ public interface SearchHistoryRepository {
     SearchHistoryEntity selectById(@Param("searchHistoryId") int searchHistoryId);
 
     int delete(@Param("searchHistoryId") int searchHistoryId);
+
+    List<SearchHistoryEntity> selectAll();
 }

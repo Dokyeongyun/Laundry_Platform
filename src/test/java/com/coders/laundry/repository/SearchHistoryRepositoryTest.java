@@ -1,11 +1,12 @@
 package com.coders.laundry.repository;
 
-import com.coders.laundry.domain.entity.LaundryEntity;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -86,5 +87,14 @@ class SearchHistoryRepositoryTest {
         assertEquals(1, result);
         SearchHistoryEntity deleted = searchHistoryRepository.selectById(searchHistoryId);
         assertNull(deleted);
+    }
+
+    @Test
+    void selectAll() {
+        // Act
+        List<SearchHistoryEntity> result = searchHistoryRepository.selectAll();
+
+        // Assert
+        assertNotNull(result);
     }
 }
