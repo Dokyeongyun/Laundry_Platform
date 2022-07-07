@@ -48,7 +48,7 @@
     <select id="selectById"
             parameterType="int"
             resultType="PostEntity">
-        SELECT post_id, category_id, writer, title, contents, create_date, like_num, update_date, delete_date
+        SELECT post_id, category_id, writer, title, contents, create_date, like_num, update_date
           FROM post
          WHERE post_id = #{postId}
     </select>
