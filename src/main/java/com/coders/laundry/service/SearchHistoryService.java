@@ -39,8 +39,9 @@ public class SearchHistoryService {
         for (SearchHistoryEntity entity : list) {
             int searchHistoryId = entity.getSearchHistoryId();
             String keyword = entity.getKeyword();
+            String type = entity.getType();
             LocalDateTime createDate = entity.getCreateDate();
-            result.add(new SearchHistory(searchHistoryId, keyword, createDate));
+            result.add(new SearchHistory(searchHistoryId, keyword, type, createDate));
         }
 
         return result;

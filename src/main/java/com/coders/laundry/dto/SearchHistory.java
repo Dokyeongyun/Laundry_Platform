@@ -10,5 +10,6 @@ import java.time.LocalDateTime;
 public class SearchHistory {
     private int searchKeywordId;
     private String keyword;
+    private String type;
     private LocalDateTime createdAt;
 }
