@@ -18,5 +18,13 @@ public interface SearchHistoryRepository {
 
     List<SearchHistoryEntity> selectAll();
 
+    int selectCountByMemberId(@Param("searchMemberId") int searchMemberId);
+
+    List<SearchHistoryEntity> selectListByMemberId(
+            @Param("searchMemberId") int searchMemberId,
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("sort") String sort);
+
     List<SearchHistoryEntity> selectAllByMemberId(@Param("searchMemberId") int searchMemberId);
 }

@@ -99,6 +99,34 @@ class SearchHistoryRepositoryTest {
     }
 
     @Test
+    void selectCountByMemberId() {
+        // Arrange
+        int searchMemberId = 1;
+
+        // Act
+        int result = searchHistoryRepository.selectCountByMemberId(searchMemberId);
+
+        // Assert
+        assertTrue(result >= 0);
+    }
+
+    @Test
+    void selectListByMemberId() {
+        // Arrange
+        int searchMemberId = 1;
+        int offset = 0;
+        int limit = 20;
+        String sort = "create_date";
+
+        // Act
+        List<SearchHistoryEntity> result
+                = searchHistoryRepository.selectListByMemberId(searchMemberId, offset, limit, sort);
+
+        // Assert
+        assertNotNull(result);
+    }
+
+    @Test
     void selectAllByMemberId() {
         // Arrange
         int searchMemberId = 1;
@@ -108,7 +136,7 @@ class SearchHistoryRepositoryTest {
 
         // Assert
         assertNotNull(result);
-        for(SearchHistoryEntity entity : result) {
+        for (SearchHistoryEntity entity : result) {
             assertEquals(searchMemberId, entity.getSearchMemberId());
         }
 

@@ -25,12 +25,36 @@
          WHERE search_history_id = #{searchHistoryId};
     </delete>
 
-    <select id="selectAll" resultType="SearchHistoryEntity">
+    <select id="selectAll"
+            resultType="SearchHistoryEntity">
         SELECT search_history_id, keyword, type, search_member_id, create_date
           FROM search_history;
     </select>
 
-    <select id="selectAllByMemberId" resultType="SearchHistoryEntity">
+    <select id="selectCountByMemberId"
+            resultType="int">
+        SELECT COUNT(*)
+          FROM search_history
+         WHERE search_member_id = #{searchMemberId};
+    </select>
+
+    <select id="selectListByMemberId"
+            resultType="SearchHistoryEntity">
+        SELECT search_history_id, keyword, type, search_member_id, create_date
+          FROM search_history
+         WHERE search_member_id = #{searchMemberId}
+        <if test="sort eq 'create_date'">
+            ORDER BY create_date ASC
+        </if>
+        <if test="sort eq '-create_date'">
+            ORDER BY create_date DESC
+        </if>
+         LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+
+    <select id="selectAllByMemberId"
+            resultType="SearchHistoryEntity">
         SELECT search_history_id, keyword, type, search_member_id, create_date
           FROM search_history
          WHERE search_member_id = #{searchMemberId};
