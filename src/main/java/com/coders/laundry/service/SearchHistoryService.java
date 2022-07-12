@@ -1,9 +1,11 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
+import com.coders.laundry.domain.exceptions.NotAuthorizedException;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
+import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,14 @@ public class SearchHistoryService {
                 .type(created.getType())
                 .createdAt(created.getCreateDate())
                 .build();
+    }
+
+    public void removeSearchHistory(int memberId, SearchHistoryRemoveRequest request) {
+        SearchHistoryEntity entity = searchHistoryRepository.selectById(request.getSearchHistoryId());
+        if (entity == null || memberId != entity.getSearchMemberId()) {
+            throw new NotAuthorizedException();
+        }
+
+        searchHistoryRepository.delete(request.getSearchHistoryId());
     }
 }
