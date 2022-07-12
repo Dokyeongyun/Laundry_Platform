@@ -35,7 +35,8 @@ public class SearchHistoryController {
             @RequestParam int offset,
             @RequestParam int limit,
             @RequestParam String sort,
-            @RequestParam(required = false, defaultValue = "asc") String sortType) {
+            @RequestParam(required = false, defaultValue = "asc") String sortType
+    ) {
 
         // TODO verify token value and retrieve user details (ex.memberId)
         if (!tokenManagerService.verify(token)) {
@@ -106,6 +107,26 @@ public class SearchHistoryController {
         SearchHistory searchHistory = searchHistoryService.saveSearchHistory(memberId, searchHistoryRegisterRequest);
 
         return ResponseEntity.ok().body(searchHistory);
+    }
+
+    @DeleteMapping(value = "/histories",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removeSearchHistory(
+            @RequestHeader("Authorization") String token,
+            @RequestBody SearchHistoryRemoveRequest searchHistoryRemoveRequest
+    ) {
+        // TODO verify token value and retrieve user details if token is present(ex.memberId)
+        if (token != null && !tokenManagerService.verify(token)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("Please check authorization token value."));
+        }
+
+        int memberId = tokenManagerService.findMemberId(token);
+        searchHistoryService.removeSearchHistory(memberId, searchHistoryRemoveRequest);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
