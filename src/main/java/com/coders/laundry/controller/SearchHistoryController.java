@@ -1,9 +1,6 @@
 package com.coders.laundry.controller;
 
-import com.coders.laundry.dto.ErrorResponse;
-import com.coders.laundry.dto.Page;
-import com.coders.laundry.dto.Pageable;
-import com.coders.laundry.dto.SearchHistory;
+import com.coders.laundry.dto.*;
 import com.coders.laundry.service.SearchHistoryService;
 import com.coders.laundry.service.TokenManagerService;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +17,21 @@ import java.util.List;
 public class SearchHistoryController {
 
     private final SearchHistoryService searchHistoryService;
+
     private final TokenManagerService tokenManagerService;
 
+    // TODO convert to enum class below constants
     private static final List<String> AVAILABLE_SORT_LIST = List.of("created");
 
     private static final List<String> AVAILABLE_SORT_TYPE_LIST = List.of("asc", "desc");
+
+    private static final List<String> AVAILABLE_SEARCH_TYPE_LIST = List.of("laundry", "board");
 
     @GetMapping(value = "/histories/recency",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> recentSearchKeywords(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(value = "Authorization", required = true) String token,
             @RequestParam int offset,
             @RequestParam int limit,
             @RequestParam String sort,
@@ -67,6 +68,44 @@ public class SearchHistoryController {
         Page<SearchHistory> page = new Page<>(totalCount, pageable, list);
 
         return ResponseEntity.ok().body(page);
+    }
+
+    @PostMapping(value = "/histories",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> saveSearchHistory(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestBody SearchHistoryRegisterRequest searchHistoryRegisterRequest
+    ) {
+        // TODO verify token value and retrieve user details if token is present(ex.memberId)
+        if (token != null && !tokenManagerService.verify(token)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("Please check authorization token value."));
+        }
+
+        // validate parameters value
+        String keyword = searchHistoryRegisterRequest.getKeyword();
+        String type = searchHistoryRegisterRequest.getType();
+        if (keyword.length() > 30) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(
+                            "'keyword' parameter value is not valid. It's length must be 30 length or less."));
+        }
+
+        if (!AVAILABLE_SEARCH_TYPE_LIST.contains(type)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(String.format(
+                            "'type' parameter value is not valid. You can use this options %s.",
+                            AVAILABLE_SEARCH_TYPE_LIST)));
+        }
+
+        int memberId = token == null ? -1 : tokenManagerService.findMemberId(token);
+        SearchHistory searchHistory = searchHistoryService.saveSearchHistory(memberId, searchHistoryRegisterRequest);
+
+        return ResponseEntity.ok().body(searchHistory);
     }
 
 }
