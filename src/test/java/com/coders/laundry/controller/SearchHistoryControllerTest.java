@@ -52,13 +52,13 @@ class SearchHistoryControllerTest {
     }
 
     @Test
-    void recentSearchKeywords_OK() throws Exception {
+    void inquirySearchKeywords_OK() throws Exception {
         // Arrange
         String token = "Bearer test";
         when(tokenManagerService.verify(token)).thenReturn(true);
 
         // Act
-        ResultActions actions = mockMvc.perform(get("/api/search/histories/recency")
+        ResultActions actions = mockMvc.perform(get("/api/search/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
                 .queryParam("offset", "0")
@@ -78,13 +78,13 @@ class SearchHistoryControllerTest {
     }
 
     @Test
-    void recentSearchKeywords_BadRequest() throws Exception {
+    void inquirySearchKeywords_BadRequest() throws Exception {
         // Arrange
         String token = "Bearer test";
         when(tokenManagerService.verify(token)).thenReturn(true);
 
         // Act
-        ResultActions actions = mockMvc.perform(get("/api/search/histories/recency")
+        ResultActions actions = mockMvc.perform(get("/api/search/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
                 .queryParam("offset", "0")
@@ -98,13 +98,13 @@ class SearchHistoryControllerTest {
     }
 
     @Test
-    void recentSearchKeywords_Unauthorized() throws Exception {
+    void inquirySearchKeywords_Unauthorized() throws Exception {
         // Arrange
         String token = "Bearer test";
         when(tokenManagerService.verify(token)).thenReturn(false);
 
         // Act
-        ResultActions actions = mockMvc.perform(get("/api/search/histories/recency")
+        ResultActions actions = mockMvc.perform(get("/api/search/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
                 .queryParam("offset", "0")

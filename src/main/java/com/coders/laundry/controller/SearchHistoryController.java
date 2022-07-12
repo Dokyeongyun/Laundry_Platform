@@ -27,11 +27,11 @@ public class SearchHistoryController {
 
     private static final List<String> AVAILABLE_SEARCH_TYPE_LIST = List.of("laundry", "board");
 
-    @GetMapping(value = "/histories/recency",
+    @GetMapping(value = "/histories",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> recentSearchKeywords(
-            @RequestHeader(value = "Authorization", required = true) String token,
+    public ResponseEntity<?> inquirySearchKeywords(
+            @RequestHeader("Authorization") String token,
             @RequestParam int offset,
             @RequestParam int limit,
             @RequestParam String sort,
