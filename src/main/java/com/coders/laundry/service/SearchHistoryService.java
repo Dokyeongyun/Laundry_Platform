@@ -3,6 +3,7 @@ package com.coders.laundry.service;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
+import com.coders.laundry.dto.SearchHistoryRegisterRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,23 @@ public class SearchHistoryService {
         }
 
         return result;
+    }
+
+    public SearchHistory saveSearchHistory(int memberId, SearchHistoryRegisterRequest request) {
+        SearchHistoryEntity entity = SearchHistoryEntity.builder()
+                .keyword(request.getKeyword())
+                .type(request.getType())
+                .searchMemberId(memberId <= 0 ? null : memberId)
+                .build();
+
+        searchHistoryRepository.insert(entity);
+        SearchHistoryEntity created = searchHistoryRepository.selectById(entity.getSearchHistoryId());
+
+        return SearchHistory.builder()
+                .searchHistoryId(created.getSearchHistoryId())
+                .keyword(created.getKeyword())
+                .type(created.getType())
+                .createdAt(created.getCreateDate())
+                .build();
     }
 }
