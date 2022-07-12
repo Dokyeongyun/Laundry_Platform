@@ -62,8 +62,8 @@ public class SearchHistoryController {
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
 
         int memberId = tokenManagerService.findMemberId(token);
-        int totalCount = searchHistoryService.findRecentSearchKeywordsCountByMemberId(memberId);
-        List<SearchHistory> list = searchHistoryService.findRecentSearchKeywordsByMemberId(memberId, pageable);
+        int totalCount = searchHistoryService.findSearchHistoriesCountByMemberId(memberId);
+        List<SearchHistory> list = searchHistoryService.findSearchHistoriesByMemberId(memberId, pageable);
 
         Page<SearchHistory> page = new Page<>(totalCount, pageable, list);
 

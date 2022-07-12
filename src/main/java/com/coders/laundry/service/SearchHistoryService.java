@@ -18,11 +18,11 @@ public class SearchHistoryService {
 
     private final SearchHistoryRepository searchHistoryRepository;
 
-    public int findRecentSearchKeywordsCountByMemberId(int memberId) {
+    public int findSearchHistoriesCountByMemberId(int memberId) {
         return searchHistoryRepository.selectCountByMemberId(memberId);
     }
 
-    public List<SearchHistory> findRecentSearchKeywordsByMemberId(int memberId, Pageable pageable) {
+    public List<SearchHistory> findSearchHistoriesByMemberId(int memberId, Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();

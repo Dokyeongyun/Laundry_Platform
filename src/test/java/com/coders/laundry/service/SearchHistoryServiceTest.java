@@ -35,19 +35,19 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void findRecentSearchKeywordsCountByMemberId() {
+    void findSearchHistoriesCountByMemberId() {
         // Arrange
         int memberId = 1;
 
         // Act
-        int result = searchHistoryService.findRecentSearchKeywordsCountByMemberId(memberId);
+        int result = searchHistoryService.findSearchHistoriesCountByMemberId(memberId);
 
         // Assert
         assertTrue(result >= 0);
     }
 
     @Test
-    void findRecentSearchKeywordsByMemberId() {
+    void findSearchHistoriesByMemberId() {
         // Arrange
         int memberId = 1;
         int offset = 0;
@@ -59,7 +59,7 @@ class SearchHistoryServiceTest {
 
         // Act
         List<SearchHistory> result
-                = searchHistoryService.findRecentSearchKeywordsByMemberId(memberId, pageable);
+                = searchHistoryService.findSearchHistoriesByMemberId(memberId, pageable);
 
         // Assert
         assertNotNull(result);
