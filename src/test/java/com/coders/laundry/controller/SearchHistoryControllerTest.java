@@ -137,7 +137,7 @@ class SearchHistoryControllerTest {
 
         when(tokenManagerService.verify(token)).thenReturn(true);
         when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
-        when(searchHistoryService.saveSearchHistory(memberId, request)).thenReturn(searchHistory);
+        when(searchHistoryService.save(memberId, request)).thenReturn(searchHistory);
 
         String requestBody = objectMapper.writeValueAsString(request);
 
@@ -167,7 +167,7 @@ class SearchHistoryControllerTest {
 
         when(tokenManagerService.verify(token)).thenReturn(true);
         when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
-        doNothing().when(searchHistoryService).removeSearchHistory(memberId, request);
+        doNothing().when(searchHistoryService).remove(memberId, request);
 
         String requestBody = objectMapper.writeValueAsString(request);
 
@@ -195,7 +195,7 @@ class SearchHistoryControllerTest {
         when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
         doThrow(new NotAuthorizedException())
                 .when(searchHistoryService)
-                .removeSearchHistory(memberId, request);
+                .remove(memberId, request);
 
         String requestBody = objectMapper.writeValueAsString(request);
 

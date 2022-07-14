@@ -63,8 +63,8 @@ public class SearchHistoryController {
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
 
         int memberId = tokenManagerService.findMemberId(token);
-        int totalCount = searchHistoryService.findSearchHistoriesCountByMemberId(memberId);
-        List<SearchHistory> list = searchHistoryService.findSearchHistoriesByMemberId(memberId, pageable);
+        int totalCount = searchHistoryService.findCountByMemberId(memberId);
+        List<SearchHistory> list = searchHistoryService.findByMemberId(memberId, pageable);
 
         Page<SearchHistory> page = new Page<>(totalCount, pageable, list);
 
@@ -104,7 +104,7 @@ public class SearchHistoryController {
         }
 
         int memberId = token == null ? -1 : tokenManagerService.findMemberId(token);
-        SearchHistory searchHistory = searchHistoryService.saveSearchHistory(memberId, searchHistoryRegisterRequest);
+        SearchHistory searchHistory = searchHistoryService.save(memberId, searchHistoryRegisterRequest);
 
         return ResponseEntity.ok().body(searchHistory);
     }
@@ -124,7 +124,7 @@ public class SearchHistoryController {
         }
 
         int memberId = tokenManagerService.findMemberId(token);
-        searchHistoryService.removeSearchHistory(memberId, searchHistoryRemoveRequest);
+        searchHistoryService.remove(memberId, searchHistoryRemoveRequest);
 
         return ResponseEntity.noContent().build();
     }

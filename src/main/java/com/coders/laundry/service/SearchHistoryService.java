@@ -20,11 +20,11 @@ public class SearchHistoryService {
 
     private final SearchHistoryRepository searchHistoryRepository;
 
-    public int findSearchHistoriesCountByMemberId(int memberId) {
+    public int findCountByMemberId(int memberId) {
         return searchHistoryRepository.selectCountByMemberId(memberId);
     }
 
-    public List<SearchHistory> findSearchHistoriesByMemberId(int memberId, Pageable pageable) {
+    public List<SearchHistory> findByMemberId(int memberId, Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();
@@ -50,7 +50,7 @@ public class SearchHistoryService {
         return result;
     }
 
-    public SearchHistory saveSearchHistory(int memberId, SearchHistoryRegisterRequest request) {
+    public SearchHistory save(int memberId, SearchHistoryRegisterRequest request) {
         SearchHistoryEntity entity = SearchHistoryEntity.builder()
                 .keyword(request.getKeyword())
                 .type(request.getType())
@@ -68,7 +68,7 @@ public class SearchHistoryService {
                 .build();
     }
 
-    public void removeSearchHistory(int memberId, SearchHistoryRemoveRequest request) {
+    public void remove(int memberId, SearchHistoryRemoveRequest request) {
         SearchHistoryEntity entity = searchHistoryRepository.selectById(request.getSearchHistoryId());
         if (entity == null || memberId != entity.getSearchMemberId()) {
             throw new NotAuthorizedException();

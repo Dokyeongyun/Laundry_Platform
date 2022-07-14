@@ -36,19 +36,19 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void findSearchHistoriesCountByMemberId() {
+    void findCountByMemberId() {
         // Arrange
         int memberId = 1;
 
         // Act
-        int result = searchHistoryService.findSearchHistoriesCountByMemberId(memberId);
+        int result = searchHistoryService.findCountByMemberId(memberId);
 
         // Assert
         assertTrue(result >= 0);
     }
 
     @Test
-    void findSearchHistoriesByMemberId() {
+    void findByMemberId() {
         // Arrange
         int memberId = 1;
         int offset = 0;
@@ -59,8 +59,7 @@ class SearchHistoryServiceTest {
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
 
         // Act
-        List<SearchHistory> result
-                = searchHistoryService.findSearchHistoriesByMemberId(memberId, pageable);
+        List<SearchHistory> result = searchHistoryService.findByMemberId(memberId, pageable);
 
         // Assert
         assertNotNull(result);
@@ -68,7 +67,7 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void saveSearchHistory() {
+    void save() {
         // Arrange
         int memberId = -1;
         SearchHistoryRegisterRequest request = new SearchHistoryRegisterRequest("test keyword", "board");
@@ -91,7 +90,7 @@ class SearchHistoryServiceTest {
         when(searchHistoryRepository.selectById(entity.getSearchHistoryId())).thenReturn(created);
 
         // Act
-        SearchHistory result = searchHistoryService.saveSearchHistory(memberId, request);
+        SearchHistory result = searchHistoryService.save(memberId, request);
 
         // Assert
         assertNotNull(result);
@@ -102,7 +101,7 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void removeSearchHistory() {
+    void remove() {
         // Assert
         int memberId = 1;
         SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(1);
@@ -119,14 +118,14 @@ class SearchHistoryServiceTest {
         when(searchHistoryRepository.delete(request.getSearchHistoryId())).thenReturn(1);
 
         // Act
-        searchHistoryService.removeSearchHistory(memberId, request);
+        searchHistoryService.remove(memberId, request);
 
         // Assert
         // noting to assert
     }
 
     @Test
-    void removeSearchHistory_NotAuthorizedException() {
+    void remove_NotAuthorizedException() {
         // Assert
         int memberId = 1;
         SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(1);
@@ -143,7 +142,7 @@ class SearchHistoryServiceTest {
 
         // Act & Assert
         assertThrows(NotAuthorizedException.class,
-                () -> searchHistoryService.removeSearchHistory(memberId, request)
+                () -> searchHistoryService.remove(memberId, request)
         );
     }
 }
