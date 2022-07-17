@@ -137,12 +137,14 @@ class LaundryRepositoryTest {
     @Test
     void selectAddressSearchList() {
         // Arrange
+        int memberId = 1;
         String keyword = "경기도";
         LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
         Pageable pageable = new Pageable(0, 3, "review", "desc");
 
         // Act
-        List<LaundryEntity> result = laundryRepository.selectAddressSearchList(keyword, locationSearch, pageable);
+        List<LaundryEntity> result
+                = laundryRepository.selectAddressSearchList(memberId, keyword, locationSearch, pageable);
 
         // Assert
         assertNotNull(result);
@@ -165,12 +167,14 @@ class LaundryRepositoryTest {
     @Test
     void selectKeywordSearchList() {
         // Arrange
+        int memberId = 1;
         String keyword = "크리닝";
         LocationSearch locationSearch = new LocationSearch(new Point(37.6494184000, 127.2478329000), 20000);
         Pageable pageable = new Pageable(0, 3, "review", "desc");
 
         // Act
-        List<LaundryEntity> result = laundryRepository.selectKeywordSearchList(keyword, locationSearch, pageable);
+        List<LaundryEntity> result
+                = laundryRepository.selectAddressSearchList(memberId, keyword, locationSearch, pageable);
 
         // Assert
         assertNotNull(result);
