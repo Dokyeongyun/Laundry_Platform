@@ -1,11 +1,9 @@
 package com.coders.laundry.controller;
 
-import com.coders.laundry.dto.LocationSearch;
-import com.coders.laundry.dto.Page;
-import com.coders.laundry.dto.Pageable;
-import com.coders.laundry.dto.SearchedLaundry;
+import com.coders.laundry.dto.*;
 import com.coders.laundry.service.LaundryFindService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +14,12 @@ import java.util.List;
 @RequestMapping("/api/laundries")
 @RequiredArgsConstructor
 public class LaundryController {
+
+    private static final List<String> AVAILABLE_SORT_LIST = List.of("distance", "review", "point");
+
+    private static final List<String> AVAILABLE_SORT_TYPE_LIST = List.of("asc", "desc");
+
+    private static final List<String> AVAILABLE_SEARCH_MODE_LIST = List.of("address", "keyword");
 
     private final LaundryFindService laundryFindService;
 
@@ -33,7 +37,33 @@ public class LaundryController {
             @RequestParam(required = false, defaultValue = "asc") String sortType
     ) {
 
-        // TODO validate input value
+        // validate parameters value
+        if (keyword.length() > 30) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("'keyword' parameter value is not valid. 'keyword' parameter values range from 0 to 30."));
+        }
+
+        if (!AVAILABLE_SEARCH_MODE_LIST.contains(mode)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(String.format(
+                            "'mode' parameter value is not valid. You can use this options %s.", AVAILABLE_SEARCH_MODE_LIST)));
+        }
+
+        if (!AVAILABLE_SORT_LIST.contains(sort)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(String.format(
+                            "'sort' parameter value is not valid. You can use this options %s.", AVAILABLE_SORT_LIST)));
+        }
+
+        if (!AVAILABLE_SORT_TYPE_LIST.contains(sortType)) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(String.format(
+                            "'sortType' parameter value is not valid. You can use this options %s.", AVAILABLE_SORT_TYPE_LIST)));
+        }
 
         // find searching result
         Pageable pageable = new Pageable(offset, limit, sort, sortType);

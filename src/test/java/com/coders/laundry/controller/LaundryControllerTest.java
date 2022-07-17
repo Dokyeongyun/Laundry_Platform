@@ -34,6 +34,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class LaundryControllerTest {
 
+    private static final List<String> AVAILABLE_SORT_LIST = List.of("distance", "review", "point");
+
+    private static final List<String> AVAILABLE_SORT_TYPE_LIST = List.of("asc", "desc");
+
+    private static final List<String> AVAILABLE_SEARCH_MODE_LIST = List.of("address", "keyword");
+
     private LaundryFindService laundryFindService;
 
     private MockMvc mockMvc;
@@ -49,14 +55,11 @@ class LaundryControllerTest {
     void search_OK() throws Exception {
         // Arrange
         String token = "Bearer test";
-        LocationSearch locationSearch
-                = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
         String keyword = "시흥시";
         String mode = "address";
-        int offset = 0;
-        int limit = 20;
-        String sort = "distance";
-        String sortType = "desc";
+
+        Pageable pageable = new Pageable(0, 20, "distance", "desc");
 
         SearchedLaundry searchedLaundry = SearchedLaundry.builder()
                 .laundryId(148)
@@ -78,32 +81,20 @@ class LaundryControllerTest {
         List<SearchedLaundry> list = List.of(searchedLaundry);
 
         when(laundryFindService.findCount(keyword, locationSearch, mode)).thenReturn(1);
-        when(laundryFindService.search(keyword, locationSearch, new Pageable(offset, limit, sort, sortType), mode))
+        when(laundryFindService.search(keyword, locationSearch, pageable, mode))
                 .thenReturn(list);
 
         // Act
-        ResultActions actions = mockMvc.perform(get("/api/laundries")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", token)
-                .queryParam("keyword", keyword)
-                .queryParam("baseLocation.latitude", locationSearch.getBaseLocation().getLatitude() + "")
-                .queryParam("baseLocation.longitude", locationSearch.getBaseLocation().getLongitude() + "")
-                .queryParam("radius", locationSearch.getRadius() + "")
-                .queryParam("mode", mode)
-                .queryParam("offset", offset + "")
-                .queryParam("limit", limit + "")
-                .queryParam("sort", sort)
-                .queryParam("sortType", sortType)
-        );
+        ResultActions actions = actSearch(token, keyword, locationSearch, mode, pageable);
 
         // Assert
         actions.andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("totalCount").value(1))
-                .andExpect(jsonPath("offset").value(offset))
-                .andExpect(jsonPath("limit").value(limit))
-                .andExpect(jsonPath("sort").value(sort))
-                .andExpect(jsonPath("sortType").value(sortType))
+                .andExpect(jsonPath("offset").value(pageable.getOffset()))
+                .andExpect(jsonPath("limit").value(pageable.getLimit()))
+                .andExpect(jsonPath("sort").value(pageable.getSort()))
+                .andExpect(jsonPath("sortType").value(pageable.getSortType()))
                 .andExpect(jsonPath("list").exists())
                 .andExpect(jsonPath("$.list[0].laundryId").value(searchedLaundry.getLaundryId()))
                 .andExpect(jsonPath("$.list[0].name").value(searchedLaundry.getName()))
@@ -123,4 +114,85 @@ class LaundryControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    void search_InvalidModeParam_BadRequest() throws Exception {
+        // Arrange
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        Pageable pageable = new Pageable(0, 20, "distance", "desc");
+
+        // Act
+        ResultActions actions = actSearch("Bearer test", "시흥시", locationSearch, "invalid", pageable);
+
+        // Assert
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorMessage").value(
+                        String.format("'mode' parameter value is not valid. You can use this options %s.",
+                                AVAILABLE_SEARCH_MODE_LIST)));
+    }
+
+    @Test
+    void search_InvalidSortParam_BadRequest() throws Exception {
+        // Arrange
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        Pageable pageable = new Pageable(0, 20, "invalid", "desc");
+
+        // Act
+        ResultActions actions = actSearch("Bearer test", "시흥시", locationSearch, "keyword", pageable);
+
+        // Assert
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorMessage").value(
+                        String.format("'sort' parameter value is not valid. You can use this options %s.",
+                                AVAILABLE_SORT_LIST)));
+    }
+
+    @Test
+    void search_InvalidSortTypeParam_BadRequest() throws Exception {
+        // Arrange
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        Pageable pageable = new Pageable(0, 20, "review", "invalid");
+
+        // Act
+        ResultActions actions = actSearch("Bearer test", "시흥시", locationSearch, "keyword", pageable);
+
+        // Assert
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorMessage").value(
+                        String.format("'sortType' parameter value is not valid. You can use this options %s.",
+                                AVAILABLE_SORT_TYPE_LIST)));
+    }
+
+    @Test
+    void search_InvalidKeywordParamLength_BadRequest() throws Exception {
+        // Arrange
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        Pageable pageable = new Pageable(0, 20, "review", "desc");
+        String keyword = "30자 이상 검색 키워드는 허용되지 않습니다. 다시 입력해주세요.";
+
+        // Act
+        ResultActions actions = actSearch("Bearer test", keyword, locationSearch, "keyword", pageable);
+
+        // Assert
+        actions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errorMessage").value(
+                        "'keyword' parameter value is not valid. 'keyword' parameter values range from 0 to 30."));
+    }
+
+    private ResultActions actSearch(String token, String keyword,
+                                    LocationSearch locationSearch,
+                                    String mode, Pageable pageable) throws Exception {
+        return mockMvc.perform(get("/api/laundries")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", token)
+                .queryParam("keyword", keyword)
+                .queryParam("baseLocation.latitude", locationSearch.getBaseLocation().getLatitude() + "")
+                .queryParam("baseLocation.longitude", locationSearch.getBaseLocation().getLongitude() + "")
+                .queryParam("radius", locationSearch.getRadius() + "")
+                .queryParam("mode", mode)
+                .queryParam("offset", pageable.getOffset() + "")
+                .queryParam("limit", pageable.getLimit() + "")
+                .queryParam("sort", pageable.getSort())
+                .queryParam("sortType", pageable.getSortType())
+        );
+    }
 }
