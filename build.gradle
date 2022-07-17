@@ -27,6 +27,7 @@ dependencies {
 
     // H2
     runtimeOnly 'com.h2database:h2:2.1.212'
+    implementation 'org.orbisgis:h2gis:2.1.0'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
