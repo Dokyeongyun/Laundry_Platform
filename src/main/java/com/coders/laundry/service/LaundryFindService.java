@@ -1,6 +1,5 @@
 package com.coders.laundry.service;
 
-import com.coders.laundry.domain.entity.LaundryEntity;
 import com.coders.laundry.dto.LocationSearch;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchedLaundry;
@@ -24,7 +23,8 @@ public class LaundryFindService {
         return 0;
     }
 
-    public List<SearchedLaundry> search(String keyword,
+    public List<SearchedLaundry> search(int memberId,
+                                        String keyword,
                                         LocationSearch locationSearch,
                                         Pageable pageable,
                                         String searchMode) {

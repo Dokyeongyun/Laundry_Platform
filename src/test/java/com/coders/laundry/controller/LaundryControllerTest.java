@@ -5,6 +5,7 @@ import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.Point;
 import com.coders.laundry.dto.SearchedLaundry;
 import com.coders.laundry.service.LaundryFindService;
+import com.coders.laundry.service.TokenManagerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +43,16 @@ class LaundryControllerTest {
 
     private LaundryFindService laundryFindService;
 
+    private TokenManagerService tokenManagerService;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     public void before() {
         laundryFindService = mock(LaundryFindService.class);
-        LaundryController laundryController = new LaundryController(laundryFindService);
+        tokenManagerService = mock(TokenManagerService.class);
+        LaundryController laundryController
+                = new LaundryController(laundryFindService, tokenManagerService);
         mockMvc = MockMvcBuilders.standaloneSetup(laundryController).build();
     }
 
@@ -80,8 +85,11 @@ class LaundryControllerTest {
                 .build();
         List<SearchedLaundry> list = List.of(searchedLaundry);
 
+        int memberId = 1;
+        when(tokenManagerService.verify(token)).thenReturn(true);
+        when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
         when(laundryFindService.findCount(keyword, locationSearch, mode)).thenReturn(1);
-        when(laundryFindService.search(keyword, locationSearch, pageable, mode))
+        when(laundryFindService.search(memberId, keyword, locationSearch, pageable, mode))
                 .thenReturn(list);
 
         // Act
