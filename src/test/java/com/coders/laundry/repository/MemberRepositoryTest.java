@@ -125,4 +125,32 @@ class MemberRepositoryTest {
         assertNull(deleted);
     }
 
+    @Test
+    void selectByPhoneNumber() {
+        //Arrange
+        MemberEntity expected = MemberEntity.builder()
+                .phoneNum("12341234")
+                .password("test")
+                .nickname("연습")
+                .birthday(LocalDate.of(1998,2,2))
+                .gender("F")
+                .build();
+
+        int insertCount = memberRepository.insert(expected);
+        assertEquals(1, insertCount);
+
+        //Act
+        MemberEntity actual = memberRepository.selectByPhoneNumber(expected.getPhoneNum());
+
+        //Assert
+        assertEquals(expected.getPhoneNum(), actual.getPhoneNum());
+        assertEquals(expected.getPassword(), actual.getPassword());
+        assertEquals(expected.getNickname(), actual.getNickname());
+        assertEquals(expected.getBirthday(), actual.getBirthday());
+        assertEquals(expected.getGender(), actual.getGender());
+        assertFalse(actual.isAutoLoginYn());
+        assertNotNull(actual.getJoinDate());
+        assertNull(actual.getWithdrawalDate());
+    }
+
 }

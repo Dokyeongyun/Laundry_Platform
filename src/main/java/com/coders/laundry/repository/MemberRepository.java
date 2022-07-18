@@ -11,5 +11,6 @@ public interface MemberRepository {
     MemberEntity selectById(int memberId);
     int insert(MemberEntity memberEntity);
     int update(MemberEntity memberEntity);
-    int delete(@Param("memberId") int memberId );
+    int delete(@Param("memberId") int memberId);
+    MemberEntity selectByPhoneNumber(String phoneNumber);
 }
