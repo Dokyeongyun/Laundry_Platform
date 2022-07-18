@@ -18,8 +18,8 @@ public class LoginService {
 
     //회원존재여부확인
     public boolean existMember(String phoneNum){
-        MemberEntity login_member = memberRepository.selectByPhoneNumber(phoneNum);
-        if (login_member == null)
+        MemberEntity loginMember = memberRepository.selectByPhoneNumber(phoneNum);
+        if (loginMember == null)
             return false;
         else
             return true;
