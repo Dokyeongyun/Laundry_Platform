@@ -1,12 +1,16 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.MemberEntity;
+import com.coders.laundry.dto.LoginResponse;
+import com.coders.laundry.jwt.JwtProvider;
 import com.coders.laundry.repository.MemberRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoginService {
     private MemberRepository memberRepository;
+    private JwtProvider jwtProvider = new JwtProvider();
+
     @Autowired
     LoginService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
@@ -27,5 +31,16 @@ public class LoginService {
         return BCrypt.checkpw(pw, login_member.getPassword());
     }
 
-
+    //로그인성공 시, responsebody에 들어갈 값 반환(회원정보, 토큰발급)
+    public LoginResponse getLoginResponse(String phoneNum){
+        //로그인한 회원객체 정보 가져오기
+        MemberEntity member = memberRepository.selectByPhoneNumber(phoneNum);
+        //토큰 발급
+        String token = jwtProvider.createdToken(phoneNum);
+        LoginResponse loginResponse = LoginResponse.builder()
+                .memberEntity(member)
+                .jwt(token)
+                .build();
+        return loginResponse;
+    }
 }

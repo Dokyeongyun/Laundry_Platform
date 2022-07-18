@@ -1,6 +1,7 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.MemberEntity;
+import com.coders.laundry.dto.LoginResponse;
 import com.coders.laundry.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,5 +77,21 @@ class LoginServiceTest {
         //Assert
         //일치여부가 true인지 검증
         assertTrue(isMatch);
+    }
+
+    @Test
+    @DisplayName("로그인성공 시, responsebody에 들어갈 값 반환(회원정보, 토큰발급)하는 메서드")
+    void getLoginResponse() {
+        //Arrange
+        String phoneNum = "01012341234";
+        MemberEntity member = MemberEntity.builder().build();
+        when(memberRepository.selectByPhoneNumber(phoneNum)).thenReturn(member);
+
+        //Act
+        LoginResponse loginResponse = loginService.getLoginResponse(phoneNum);
+
+        //Assert
+        assertNotNull(loginResponse.getJwt());
+        assertEquals(loginResponse.getMemberEntity(), member);
     }
 }
