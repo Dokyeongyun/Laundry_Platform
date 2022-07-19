@@ -19,14 +19,15 @@ class TokenServiceTest {
     private TokenService tokenService;
 
     @Test
-    @DisplayName("토큰 발급 메서드: 핸드폰 번호를 인자로 받았을 때, 토큰이 발급되는지 test")
-    void createdToken() {
+    @DisplayName("토큰 발급 메서드: 회원번호를 인자로 받았을 때, 토큰이 발급되는지 test")
+    void createToken() {
 
         //Arrange
-        String expected = "12341234";
+        int id = 1;
+        String expected = Integer.toString(id);
         String secretKey = "laundry";
         //Act
-        String token = tokenService.createdToken(expected);
+        String token = tokenService.createToken(id);
 
         //Assert
         Claims claims = Jwts.parser()

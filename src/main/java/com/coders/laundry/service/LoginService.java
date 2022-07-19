@@ -36,7 +36,7 @@ public class LoginService {
         //로그인한 회원객체 정보 가져오기
         MemberEntity member = memberRepository.selectByPhoneNumber(phoneNum);
         //토큰 발급
-        String token = tokenService.createdToken(phoneNum);
+        String token = tokenService.createToken(member.getMemberId());
         LoginResponse loginResponse = LoginResponse.builder()
                 .memberEntity(member)
                 .jwt(token)
