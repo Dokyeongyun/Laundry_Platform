@@ -27,11 +27,12 @@ class LoginServiceTest {
 
     private MemberRepository memberRepository;
     private LoginService loginService;
-
+    private TokenService tokenService;
     @BeforeEach
     public void setup(){
         memberRepository = mock(MemberRepository.class);
-        loginService = new LoginService(memberRepository);
+        tokenService = mock(TokenService.class);
+        loginService = new LoginService(memberRepository, tokenService);
     }
 
     @Test

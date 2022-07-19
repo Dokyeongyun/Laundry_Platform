@@ -2,18 +2,18 @@ package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.MemberEntity;
 import com.coders.laundry.dto.LoginResponse;
-import com.coders.laundry.jwt.JwtProvider;
 import com.coders.laundry.repository.MemberRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoginService {
     private MemberRepository memberRepository;
-    private JwtProvider jwtProvider = new JwtProvider();
+    private TokenService tokenService;
 
     @Autowired
-    LoginService(MemberRepository memberRepository){
+    LoginService(MemberRepository memberRepository, TokenService tokenService){
         this.memberRepository = memberRepository;
+        this.tokenService = tokenService;
     }
 
     //회원존재여부확인
@@ -36,7 +36,7 @@ public class LoginService {
         //로그인한 회원객체 정보 가져오기
         MemberEntity member = memberRepository.selectByPhoneNumber(phoneNum);
         //토큰 발급
-        String token = jwtProvider.createdToken(phoneNum);
+        String token = tokenService.createdToken(phoneNum);
         LoginResponse loginResponse = LoginResponse.builder()
                 .memberEntity(member)
                 .jwt(token)
