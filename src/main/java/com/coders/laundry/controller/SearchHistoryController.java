@@ -27,7 +27,7 @@ public class SearchHistoryController {
     @GetMapping(value = "/histories",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> inquirySearchKeywords(
+    public ResponseEntity<?> inquiry(
             @RequestHeader("Authorization") String token,
             @Valid Pageable pageable
     ) {
@@ -59,7 +59,7 @@ public class SearchHistoryController {
     @PostMapping(value = "/histories",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> saveSearchHistory(
+    public ResponseEntity<?> save(
             @RequestHeader(value = "Authorization", required = false) String token,
             @Valid @RequestBody SearchHistoryRegisterRequest searchHistoryRegisterRequest
     ) {
@@ -79,7 +79,7 @@ public class SearchHistoryController {
     @DeleteMapping(value = "/histories",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> removeSearchHistory(
+    public ResponseEntity<?> remove(
             @RequestHeader("Authorization") String token,
             @Valid @RequestBody SearchHistoryRemoveRequest searchHistoryRemoveRequest
     ) {
