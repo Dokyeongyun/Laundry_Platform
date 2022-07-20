@@ -1,13 +1,4 @@
-# Server settings
-server:
-  port: 8081
-  servlet:
-    context-path: /
-
-# Spring settings
 spring:
-  profiles:
-    active: dev
   datasource:
     url: jdbc:h2:mem:test;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;
     driverClassName: org.h2.Driver
@@ -20,20 +11,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
-      settings:
-        web-allow-others: true
-
-# ActiveMQ
-activemq:
-  broker:
-    url: tcp://localhost:61616
-
-# Logging settings
-logging:
-  level:
-    root: info
 
 # data
 data:
   laundry: classpath:data/laundry*.json
-

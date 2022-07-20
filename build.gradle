@@ -1,5 +1,5 @@
 plugins {
-	id 'eclipse'
+    id 'eclipse'
     id 'idea'
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -7,45 +7,41 @@ plugins {
     // id 'war'
 }
 
+repositories {
+    mavenCentral()
+}
+
 group = 'com.coders'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
+
+dependencies {
+    // Spring
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.6.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // MyBatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+
+    // H2
+    runtimeOnly 'com.h2database:h2:2.1.212'
+
+    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-core
+    implementation group: 'org.apache.activemq', name: 'activemq-core', version: '5.7.0'
+    // https://mvnrepository.com/artifact/org.springframework/spring-jms
+    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.20'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-}
-
-sourceSets {
-    main {
-         java {
-            srcDirs = ['src/main/java']
-         }
-    }
-    test {
-        java {
-            srcDirs = ['src/test/java']
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.6.6'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    // providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // https://mvnrepository.com/artifact/org.apache.activemq/activemq-core
-    implementation group: 'org.apache.activemq', name: 'activemq-core', version: '5.7.0'
-// https://mvnrepository.com/artifact/org.springframework/spring-jms
-    implementation group: 'org.springframework', name: 'spring-jms', version: '5.3.20'
-
 }
 
 tasks.named('test') {
@@ -55,13 +51,13 @@ tasks.named('test') {
 // Set jar task to disabled. Because jar task is basically executed starting with spring boot plug-in version 2.5 or higher.
 // Reference: https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/
 tasks.named("jar") {
-	enabled = false
+    enabled = false
 }
 
 tasks.named("bootRun") {
-	mainClass = 'com.coders.laundry.LaundryApplication'
+    mainClass = 'com.coders.laundry.LaundryApplication'
 }
 
 tasks.named("bootJar") {
-	mainClass = 'com.coders.laundry.LaundryApplication'
+    mainClass = 'com.coders.laundry.LaundryApplication'
 }

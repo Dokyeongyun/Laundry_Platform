@@ -1,5 +1,6 @@
 package com.coders.laundry;
 
+import com.coders.laundry.data.DataCreator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
