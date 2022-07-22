@@ -3,15 +3,17 @@ package com.coders.laundry.common.validation;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({FIELD})
-@Retention(RUNTIME)
 @Documented
+@Target(FIELD)
+@Retention(RUNTIME)
+@Repeatable(ValidEnum.List.class)
 @Constraint(validatedBy = {EnumValidator.class})
 public @interface ValidEnum {
 
@@ -21,5 +23,12 @@ public @interface ValidEnum {
 
     Class<? extends Payload>[] payload() default {};
 
-    Class<? extends java.lang.Enum<?>> enumClass();
+    Class<? extends Enum<?>> enumClass();
+
+    @Documented
+    @Target(FIELD)
+    @Retention(RUNTIME)
+    @interface List {
+        ValidEnum[] value();
+    }
 }
