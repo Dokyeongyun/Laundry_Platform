@@ -1,5 +1,6 @@
 package com.coders.laundry.service;
 
+import com.coders.laundry.common.validation.SearchHistorySortGroup;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
 import com.coders.laundry.dto.Pageable;
@@ -27,7 +28,9 @@ public class SearchHistoryService {
         return searchHistoryRepository.selectCountByMemberId(memberId);
     }
 
-    public List<SearchHistory> findByMemberId(int memberId, @Valid Pageable pageable) {
+    @Validated(SearchHistorySortGroup.class)
+    public List<SearchHistory> findByMemberId(int memberId,
+                                              @Valid Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();
