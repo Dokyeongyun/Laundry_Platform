@@ -26,9 +26,9 @@ public class LoginService {
     }
     //비밀번호 일치여부 확인
     public boolean matchPW(String phoneNum, String pw){
-        MemberEntity login_member = memberRepository.selectByPhoneNumber(phoneNum);
+        MemberEntity loginMember = memberRepository.selectByPhoneNumber(phoneNum);
         //사용자가 입력한 비밀번호와 DB에 저장된 비밀번호 비교
-        return BCrypt.checkpw(pw, login_member.getPassword());
+        return BCrypt.checkpw(pw, loginMember.getPassword());
     }
 
     //로그인성공 시, responsebody에 들어갈 값 반환(회원정보, 토큰발급)
@@ -39,7 +39,7 @@ public class LoginService {
         String token = tokenService.createToken(member.getMemberId());
         LoginResponse loginResponse = LoginResponse.builder()
                 .memberEntity(member)
-                .jwt(token)
+                .token(token)
                 .build();
         return loginResponse;
     }

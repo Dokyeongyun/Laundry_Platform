@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 public class LoginResponse {
+
     MemberEntity memberEntity;
-    String jwt;
+    String token;
+
 }
