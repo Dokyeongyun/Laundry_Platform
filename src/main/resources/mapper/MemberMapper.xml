@@ -42,9 +42,9 @@
     <select id="selectByPhoneNumber"
             resultType="MemberEntity">
         SELECT member_id, phone_num, password, nickname,
-        birthday, gender, auto_login_yn, join_date, withdrawal_date
-        FROM member
-        WHERE phone_num = #{phoneNum}
+               birthday, gender, auto_login_yn, join_date, withdrawal_date
+          FROM member
+         WHERE phone_num = #{phoneNum}
     </select>
 
 </mapper>
