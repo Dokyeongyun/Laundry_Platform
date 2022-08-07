@@ -23,6 +23,11 @@ spring:
       settings:
         web-allow-others: true
 
+# ActiveMQ
+activemq:
+  broker:
+    url: tcp://localhost:61616
+
 # Logging settings
 logging:
   level:
