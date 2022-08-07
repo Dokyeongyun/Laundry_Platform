@@ -1,6 +1,5 @@
 package com.coders.laundry.dto;
 
-import com.coders.laundry.domain.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,7 +7,7 @@ import lombok.Data;
 @Builder
 public class LoginResponse {
 
-    MemberEntity memberEntity;
+    Member member;
     String token;
 
 }

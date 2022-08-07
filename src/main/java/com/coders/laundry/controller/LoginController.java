@@ -17,19 +17,17 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/api/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginInfo){
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginInfo){
 
         String phoneNum = loginInfo.getPhoneNum();
         String password = loginInfo.getPassword();
 
-        if (!loginService.existMember(phoneNum)) {
-            return new ResponseEntity<>("존재하지않는 ID입니다.", HttpStatus.BAD_REQUEST);
-        }
+        LoginResponse loginResponse = loginService.login(phoneNum, password);
 
-        if (!loginService.matchPW(phoneNum, password)) {
-            return new ResponseEntity<>("비밀번호가 틀렸습니다.", HttpStatus.BAD_REQUEST);
+        if (loginResponse==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        LoginResponse loginResponse = loginService.getLoginResponse(phoneNum);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+
     }
 }
