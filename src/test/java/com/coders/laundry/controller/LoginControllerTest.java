@@ -33,16 +33,16 @@ class LoginControllerTest {
 
     @Test
     void login() {
+
         //Arrange
         LoginRequest loginRequest = LoginRequest.builder()
                 .phoneNum("01012341235")
                 .password("test12345")
                 .build();
-
-        when(loginService.existMember(loginRequest.getPhoneNum())).thenReturn(true);
-        when(loginService.matchPW(loginRequest.getPhoneNum(),loginRequest.getPassword())).thenReturn(true);
         LoginResponse loginResponse = LoginResponse.builder().build();
-        when(loginService.getLoginResponse(loginRequest.getPhoneNum())).thenReturn(loginResponse);
+
+        when(loginService.login(loginRequest.getPhoneNum(), loginRequest.getPassword())).thenReturn(loginResponse);
+
         //Act
         ResponseEntity result = loginController.login(loginRequest);
 
