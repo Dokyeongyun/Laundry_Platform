@@ -17,22 +17,39 @@ class TokenManagerServiceTest {
     private TokenManagerService tokenManagerService;
 
     @Test
-    @DisplayName("토큰 발급 메서드: 회원번호를 인자로 받았을 때, 토큰이 발급되는지 test")
+    @DisplayName("access token 발급 메서드: 회원번호를 인자로 받았을 때의 access token 발급 여부 test")
     void createToken() {
 
         //Arrange
         int id = 1;
         String expected = Integer.toString(id);
-        String secretKey = "laundry";
+        String secretKey = "laundryJwtSecret";
+
         //Act
-        String token = tokenManagerService.createToken(id);
+        String accessToken = tokenManagerService.createToken(id);
 
         //Assert
         Claims claims = Jwts.parser()
                         .setSigningKey(secretKey.getBytes())
-                        .parseClaimsJws(token).getBody();
+                        .parseClaimsJws(accessToken).getBody();
         String actual = claims.getSubject();
-        assertNotNull(token);
+        assertNotNull(accessToken);
         assertEquals(expected, actual);
+
+    }
+
+    @Test
+    @DisplayName("refresh token 발급 메서드: refresh token 발급 여부 test")
+    void createRefreshToken() {
+
+        //Arrange
+        String secretKey = "laundryJwtSecret";
+
+        //Act
+        String refreshToken = tokenManagerService.createRefreshToken();
+
+        //Assert
+        assertNotNull(refreshToken);
+
     }
 }
