@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     private final MemberRepository memberRepository;
-    private final TokenService tokenService;
+    private final TokenManagerService tokenManagerService;
 
     public LoginResponse login(String phoneNum, String password) {
 
@@ -35,7 +35,8 @@ public class LoginService {
 
         return LoginResponse.builder()
                 .member(memberInfo)
-                .token(tokenService.createToken(member.getMemberId()))
+                .accessToken(tokenManagerService.createToken(member.getMemberId()))
+                .refreshToken(tokenManagerService.createRefreshToken())
                 .build();
 
     }

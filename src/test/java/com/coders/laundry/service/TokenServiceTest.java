@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TokenServiceTest {
 
     @Autowired
-    private TokenService tokenService;
+    private TokenManagerService tokenManagerService;
 
     @Test
     @DisplayName("토큰 발급 메서드: 회원번호를 인자로 받았을 때, 토큰이 발급되는지 test")
@@ -27,7 +27,7 @@ class TokenServiceTest {
         String expected = Integer.toString(id);
         String secretKey = "laundry";
         //Act
-        String token = tokenService.createToken(id);
+        String token = tokenManagerService.createToken(id);
 
         //Assert
         Claims claims = Jwts.parser()
