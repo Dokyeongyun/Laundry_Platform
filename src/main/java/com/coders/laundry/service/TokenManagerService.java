@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,9 +16,12 @@ import java.util.Date;
 @Service
 public class TokenManagerService {
 
-    private String secretKey = "laundryJwtSecret";
-    private long tokenValidTime = 1000L*60*60;
-    private long refreshTokenValidTime = 1000L*60*60*24;
+    @Value("${jwt.secretKey}")
+    private String secretKey;
+    @Value("${jwt.accessValidTime}")
+    private long tokenValidTime;
+    @Value("${jwt.refreshValidTime}")
+    private long refreshTokenValidTime;
 
     public boolean verify(String token){
         // TODO implement
