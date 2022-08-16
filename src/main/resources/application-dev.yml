@@ -18,5 +18,5 @@ data:
 
 jwt:
   secretKey: laundryJwtSecret
-  accessValidTime: 1000L*60*60
-  refreshValidTime: 1000L*60*60*24
+  accessValidTime: 3600000
+  refreshValidTime: 86400000
