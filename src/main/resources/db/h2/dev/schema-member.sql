@@ -6,7 +6,7 @@ CREATE TABLE member (
        PRIMARY KEY (member_id),
        member_id        INT         NOT NULL AUTO_INCREMENT,
        phone_num        CHAR(11)    NOT NULL UNIQUE,
-       password         VARCHAR(50) NOT NULL,
+       password         VARCHAR(100) NOT NULL,
        nickname         VARCHAR(10) NOT NULL,
        birthday         DATE,
        gender           CHAR(1),

@@ -42,6 +42,10 @@ dependencies {
 
     // jbcrypt
     implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+
+    // JAX-B dependencies for JDK 9+
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 }
 
 configurations {

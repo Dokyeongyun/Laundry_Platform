@@ -1,5 +1,6 @@
 package com.coders.laundry.controller;
 
+import com.coders.laundry.dto.ErrorResponse;
 import com.coders.laundry.dto.LoginRequest;
 import com.coders.laundry.dto.LoginResponse;
 import com.coders.laundry.service.LoginService;
@@ -19,7 +20,7 @@ public class LoginController {
 
     @PostMapping(value = "/api/login", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginInfo){
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginInfo){
 
         String phoneNum = loginInfo.getPhoneNum();
         String password = loginInfo.getPassword();
@@ -27,7 +28,7 @@ public class LoginController {
         LoginResponse loginResponse = loginService.login(phoneNum, password);
 
         if (loginResponse==null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("잘못된 요청정보"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 
