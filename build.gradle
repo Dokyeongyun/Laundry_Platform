@@ -36,6 +36,9 @@ dependencies {
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // jbcrypt
+    implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
 }
 
 configurations {
