@@ -20,6 +20,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.6'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.6.6'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // MyBatis
@@ -27,6 +28,7 @@ dependencies {
 
     // H2
     runtimeOnly 'com.h2database:h2:2.1.212'
+    implementation 'org.orbisgis:h2gis:2.1.0'
 
     // https://mvnrepository.com/artifact/org.apache.activemq/activemq-core
     implementation group: 'org.apache.activemq', name: 'activemq-core', version: '5.7.0'

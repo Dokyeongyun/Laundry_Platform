@@ -1,15 +1,13 @@
-package com.coders.laundry.domain.entity;
+package com.coders.laundry.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class LaundryEntity {
-    // table's columns
+public class SearchedLaundry {
     private int laundryId;
     private String name;
     private String jibunAddress;
@@ -19,8 +17,6 @@ public class LaundryEntity {
     private double latitude;
     private double longitude;
     private boolean partnership;
-
-    // additional columns
     private String thumbnailImage;
     private double ratingPoint;
     private int reviewCount;

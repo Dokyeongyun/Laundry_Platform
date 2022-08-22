@@ -1,5 +1,6 @@
 package com.coders.laundry.service;
 
+import com.coders.laundry.common.validation.SearchHistorySortGroup;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
 import com.coders.laundry.dto.Pageable;
@@ -9,13 +10,16 @@ import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class SearchHistoryService {
 
     private final SearchHistoryRepository searchHistoryRepository;
@@ -24,7 +28,9 @@ public class SearchHistoryService {
         return searchHistoryRepository.selectCountByMemberId(memberId);
     }
 
-    public List<SearchHistory> findByMemberId(int memberId, Pageable pageable) {
+    @Validated(SearchHistorySortGroup.class)
+    public List<SearchHistory> findByMemberId(int memberId,
+                                              @Valid Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();
@@ -50,7 +56,7 @@ public class SearchHistoryService {
         return result;
     }
 
-    public SearchHistory save(int memberId, SearchHistoryRegisterRequest request) {
+    public SearchHistory save(int memberId, @Valid SearchHistoryRegisterRequest request) {
         SearchHistoryEntity entity = SearchHistoryEntity.builder()
                 .keyword(request.getKeyword())
                 .type(request.getType())
@@ -68,7 +74,7 @@ public class SearchHistoryService {
                 .build();
     }
 
-    public void remove(int memberId, SearchHistoryRemoveRequest request) {
+    public void remove(int memberId, @Valid SearchHistoryRemoveRequest request) {
         SearchHistoryEntity entity = searchHistoryRepository.selectById(request.getSearchHistoryId());
         if (entity == null || memberId != entity.getSearchMemberId()) {
             throw new NotAuthorizedException();
