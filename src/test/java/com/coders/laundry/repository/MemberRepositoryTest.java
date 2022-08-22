@@ -5,14 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("dev")
+@Transactional
 class MemberRepositoryTest {
 
     @Autowired
@@ -152,5 +153,4 @@ class MemberRepositoryTest {
         assertNotNull(actual.getJoinDate());
         assertNull(actual.getWithdrawalDate());
     }
-
 }

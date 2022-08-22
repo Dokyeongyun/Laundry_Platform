@@ -12,6 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,7 +59,22 @@ class LoginServiceTest {
         assertEquals(memberInfo.getPhoneNum(), member.getPhoneNum());
         assertTrue(BCrypt.checkpw(password, hashPassword));
 
-        //Arrange 입력받은 휴대폰 번호를 가진 회원이 DB에 존재하지 않는 경우
+    }
+
+    @Test
+    @DisplayName("로그인: 입력받은 휴대폰 번호를 가진 회원이 DB에 존재하지 않는 경우")
+    void login_MemberNotFound(){
+
+        //Arrange
+        String phoneNum = "01012345678";
+        String password = "testPassword";
+        String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        MemberEntity member = MemberEntity.builder()
+                .phoneNum(phoneNum)
+                .password(hashPassword)
+                .build();
+
         when(memberRepository.selectByPhoneNumber(phoneNum)).thenReturn(null);
 
         //Act
@@ -66,9 +82,23 @@ class LoginServiceTest {
 
         //Assert
         assertNull(loginResponsePhoneNumMiss);
+    }
 
-        //Arrange 입력받은 비밀번호가 DB와 일치하지않는 경우
-        String passwordMiss = "testPasswordMiss";
+    @Test
+    @DisplayName("로그인: 입력받은 비밀번호가 DB와 일치하지않는 경우")
+    void login_InvalidPassword(){
+
+        //Arrange
+        String phoneNum = "01012345678";
+        String password = "testInvalidPassword";
+        String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        MemberEntity member = MemberEntity.builder()
+                .phoneNum(phoneNum)
+                .password(hashPassword)
+                .build();
+
+        String passwordMiss = "";
         when(memberRepository.selectByPhoneNumber(phoneNum)).thenReturn(member);
 
         //Act
