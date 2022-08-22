@@ -24,10 +24,10 @@ public class SignUpController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 존재하는 휴대폰번호"));
 
         if(!signUpService.nicknameDoubleCheck(signUpRequest.getNickname()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 존재하는 닉네임"));signUpService.signUp(signUpRequest);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 존재하는 닉네임"));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        signUpService.signUp(signUpRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
-
 }
