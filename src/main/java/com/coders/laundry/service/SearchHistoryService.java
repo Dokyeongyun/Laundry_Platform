@@ -6,13 +6,13 @@ import com.coders.laundry.domain.exceptions.NotAuthorizedException;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
-import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +74,12 @@ public class SearchHistoryService {
                 .build();
     }
 
-    public void remove(int memberId, @Valid SearchHistoryRemoveRequest request) {
-        SearchHistoryEntity entity = searchHistoryRepository.selectById(request.getSearchHistoryId());
+    public void remove(int memberId, @NotNull Integer searchHistoryId) {
+        SearchHistoryEntity entity = searchHistoryRepository.selectById(searchHistoryId);
         if (entity == null || memberId != entity.getSearchMemberId()) {
             throw new NotAuthorizedException();
         }
 
-        searchHistoryRepository.delete(request.getSearchHistoryId());
+        searchHistoryRepository.delete(searchHistoryId);
     }
 }
