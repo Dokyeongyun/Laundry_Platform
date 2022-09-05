@@ -164,6 +164,29 @@ class SearchHistoryControllerTest {
     }
 
     @Test
+    void saveSearchHistory_Unauthorized() throws Exception {
+        // Arrange
+        String token = "Bearer test";
+        String keyword = "테스트";
+        String type = "laundry";
+
+        SearchHistoryRegisterRequest request = new SearchHistoryRegisterRequest(keyword, type);
+
+        when(tokenManagerService.verify(token)).thenReturn(false);
+        String requestBody = objectMapper.writeValueAsString(request);
+
+        // Act
+        ResultActions actions = mockMvc.perform(post("/api/search/histories")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", token)
+                .content(requestBody)
+        );
+
+        // Assert
+        actions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void removeSearchHistory() throws Exception {
         // Arrange
         int memberId = 1;
@@ -188,6 +211,24 @@ class SearchHistoryControllerTest {
     }
 
     @Test
+    void removeSearchHistory_Unauthorized() throws Exception {
+        // Arrange
+        Integer searchHistoryId = 1;
+        String token = "Bearer test";
+
+        when(tokenManagerService.verify(token)).thenReturn(false);
+
+        // Act
+        ResultActions actions = mockMvc.perform(delete("/api/search/histories/{searchHistoryId}", searchHistoryId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", token)
+        );
+
+        // Assert
+        actions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void removeSearchHistory_Forbidden() throws Exception {
         // Arrange
         int memberId = 1;
@@ -209,4 +250,5 @@ class SearchHistoryControllerTest {
         // Assert
         actions.andExpect(status().isForbidden());
     }
+
 }
