@@ -3,24 +3,18 @@ package com.coders.laundry.controller;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
-import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.service.SearchHistoryService;
 import com.coders.laundry.service.TokenManagerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 
@@ -28,28 +22,21 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@ActiveProfiles("dev")
 @ExtendWith(MockitoExtension.class)
+@WebMvcTest(SearchHistoryController.class)
 class SearchHistoryControllerTest {
 
+    @MockBean
     private SearchHistoryService searchHistoryService;
 
+    @MockBean
     private TokenManagerService tokenManagerService;
 
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    public void before() {
-        searchHistoryService = mock(SearchHistoryService.class);
-        this.tokenManagerService = mock(TokenManagerService.class);
-        SearchHistoryController searchHistoryController
-                = new SearchHistoryController(searchHistoryService, tokenManagerService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(searchHistoryController).build();
-    }
 
     @Test
     void inquirySearchKeywords_OK() throws Exception {
@@ -160,19 +147,17 @@ class SearchHistoryControllerTest {
     void removeSearchHistory() throws Exception {
         // Arrange
         int memberId = 1;
-        int searchHistoryId = 1;
+        Integer searchHistoryId = 1;
         String token = "Bearer test";
-
-        SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(searchHistoryId);
 
         when(tokenManagerService.verify(token)).thenReturn(true);
         when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
-        doNothing().when(searchHistoryService).remove(memberId, request);
+        doNothing().when(searchHistoryService).remove(memberId, searchHistoryId);
 
-        String requestBody = objectMapper.writeValueAsString(request);
+        String requestBody = objectMapper.writeValueAsString(searchHistoryId);
 
         // Act
-        ResultActions actions = mockMvc.perform(delete("/api/search/histories")
+        ResultActions actions = mockMvc.perform(delete("/api/search/histories/{searchHistoryId}", searchHistoryId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
                 .content(requestBody)
@@ -186,24 +171,19 @@ class SearchHistoryControllerTest {
     void removeSearchHistory_Forbidden() throws Exception {
         // Arrange
         int memberId = 1;
-        int searchHistoryId = 1;
+        Integer searchHistoryId = 1;
         String token = "Bearer test";
-
-        SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(searchHistoryId);
 
         when(tokenManagerService.verify(token)).thenReturn(true);
         when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
         doThrow(new NotAuthorizedException())
                 .when(searchHistoryService)
-                .remove(memberId, request);
-
-        String requestBody = objectMapper.writeValueAsString(request);
+                .remove(memberId, searchHistoryId);
 
         // Act
-        ResultActions actions = mockMvc.perform(delete("/api/search/histories")
+        ResultActions actions = mockMvc.perform(delete("/api/search/histories/{searchHistoryId}", searchHistoryId)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
-                .content(requestBody)
         );
 
         // Assert

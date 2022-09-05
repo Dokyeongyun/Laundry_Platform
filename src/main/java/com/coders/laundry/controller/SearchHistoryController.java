@@ -67,12 +67,12 @@ public class SearchHistoryController {
         return ResponseEntity.ok().body(searchHistory);
     }
 
-    @DeleteMapping(value = "/histories",
+    @DeleteMapping(value = "/histories/{searchHistoryId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> remove(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody SearchHistoryRemoveRequest searchHistoryRemoveRequest
+            @PathVariable Integer searchHistoryId
     ) {
         // TODO verify token value and retrieve user details if token is present(ex.memberId)
         if (token != null && !tokenManagerService.verify(token)) {
@@ -82,7 +82,7 @@ public class SearchHistoryController {
         }
 
         int memberId = tokenManagerService.findMemberId(token);
-        searchHistoryService.remove(memberId, searchHistoryRemoveRequest);
+        searchHistoryService.remove(memberId, searchHistoryId);
 
         return ResponseEntity.noContent().build();
     }
