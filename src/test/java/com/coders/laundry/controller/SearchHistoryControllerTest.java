@@ -1,6 +1,8 @@
 package com.coders.laundry.controller;
 
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
+import com.coders.laundry.dto.Page;
+import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
 import com.coders.laundry.service.SearchHistoryService;
@@ -17,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,16 +46,32 @@ class SearchHistoryControllerTest {
     void inquirySearchKeywords_OK() throws Exception {
         // Arrange
         String token = "Bearer test";
+        int memberId = 1;
+
+        Pageable pageable = new Pageable(0, 20, "created", "desc");
+
+        SearchHistory history = SearchHistory.builder()
+                .searchHistoryId(1)
+                .keyword("테스트")
+                .type("laundry")
+                .createdAt(LocalDateTime.now())
+                .build();
+        List<SearchHistory> list = new ArrayList<>(List.of(history));
+        Page<SearchHistory> expected = new Page<>(list.size(), pageable, list);
+
         when(tokenManagerService.verify(token)).thenReturn(true);
+        when(tokenManagerService.findMemberId(token)).thenReturn(memberId);
+        when(searchHistoryService.findCountByMemberId(memberId)).thenReturn(list.size());
+        when(searchHistoryService.findPageByMemberId(memberId, pageable)).thenReturn(expected);
 
         // Act
         ResultActions actions = mockMvc.perform(get("/api/search/histories")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", token)
-                .queryParam("offset", "0")
-                .queryParam("limit", "20")
-                .queryParam("sort", "created")
-                .queryParam("sortType", "desc")
+                .queryParam("offset", String.valueOf(pageable.getOffset()))
+                .queryParam("limit", String.valueOf(pageable.getLimit()))
+                .queryParam("sort", pageable.getSort())
+                .queryParam("sortType", pageable.getSortType())
         );
 
         // Assert

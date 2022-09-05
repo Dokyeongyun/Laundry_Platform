@@ -3,6 +3,7 @@ package com.coders.laundry.service;
 import com.coders.laundry.common.validation.SearchHistorySortGroup;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
+import com.coders.laundry.dto.Page;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
@@ -29,8 +30,8 @@ public class SearchHistoryService {
     }
 
     @Validated(SearchHistorySortGroup.class)
-    public List<SearchHistory> findByMemberId(int memberId,
-                                              @Valid Pageable pageable) {
+    public Page<SearchHistory> findPageByMemberId(int memberId,
+                                                  @Valid Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();
@@ -40,6 +41,8 @@ public class SearchHistoryService {
         if (sortType.equals("desc")) {
             sort = "-" + sort;
         }
+
+        int totalCount = findCountByMemberId(memberId);
 
         List<SearchHistoryEntity> list = searchHistoryRepository.selectListByMemberId(
                 memberId, pageable.getOffset(), pageable.getLimit(), sort);
@@ -53,7 +56,7 @@ public class SearchHistoryService {
             result.add(new SearchHistory(searchHistoryId, keyword, type, createDate));
         }
 
-        return result;
+        return new Page<>(totalCount, pageable, result);
     }
 
     public SearchHistory save(int memberId, @Valid SearchHistoryRegisterRequest request) {

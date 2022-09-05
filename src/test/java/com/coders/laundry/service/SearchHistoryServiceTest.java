@@ -2,6 +2,7 @@ package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
+import com.coders.laundry.dto.Page;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
@@ -14,10 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("dev")
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
@@ -46,7 +47,7 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void findByMemberId() {
+    void findPageByMemberId() {
         // Arrange
         int memberId = 1;
         int offset = 0;
@@ -57,11 +58,11 @@ class SearchHistoryServiceTest {
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
 
         // Act
-        List<SearchHistory> result = searchHistoryService.findByMemberId(memberId, pageable);
+        Page<SearchHistory> result = searchHistoryService.findPageByMemberId(memberId, pageable);
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.size() <= limit);
+        assertTrue(result.getList().size() <= limit);
     }
 
     @Test
