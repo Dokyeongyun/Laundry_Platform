@@ -28,7 +28,7 @@ public class LoginController {
         LoginResponse loginResponse = loginService.login(phoneNum, password);
 
         if (loginResponse==null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("잘못된 요청정보"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("로그인 실패"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 
