@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -56,6 +58,20 @@ class SearchHistoryServiceTest {
         String sortType = "desc";
 
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
+
+        sort = "create_date";
+        sort = "-" + sort;
+
+        SearchHistoryEntity history = SearchHistoryEntity.builder()
+                .searchHistoryId(1)
+                .keyword("테스트")
+                .type("laundry")
+                .createDate(LocalDateTime.now())
+                .build();
+        List<SearchHistoryEntity> list = new ArrayList<>(List.of(history));
+
+        when(searchHistoryRepository.selectListByMemberId(memberId, pageable.getOffset(), pageable.getLimit(), sort))
+                .thenReturn(list);
 
         // Act
         Page<SearchHistory> result = searchHistoryService.findPageByMemberId(memberId, pageable);
