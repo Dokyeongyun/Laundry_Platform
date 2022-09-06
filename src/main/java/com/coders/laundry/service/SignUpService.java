@@ -1,6 +1,8 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.MemberEntity;
+import com.coders.laundry.domain.exceptions.NicknameDuplicatedException;
+import com.coders.laundry.domain.exceptions.PhoneNumberDuplicatedException;
 import com.coders.laundry.dto.SignUpRequest;
 import com.coders.laundry.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -16,25 +17,23 @@ public class SignUpService {
 
     private final MemberRepository memberRepository;
 
-    public boolean nicknameDoubleCheck(String nickname){
-        return memberRepository.selectByNickname(nickname)==null;
-    }
-    public String hashPassword (String password){
-       return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
+    public boolean signUp(SignUpRequest signUpRequest, LocalDate birthday){
 
-    public boolean phoneNumDoubleCheck(String phoneNum){
-        return memberRepository.selectByPhoneNum(phoneNum)==null;
-    }
+        MemberEntity entity = memberRepository.selectByNickname(signUpRequest.getNickname());
+        if (entity != null){
+            throw new NicknameDuplicatedException();
+        }
 
-    public boolean signUp(SignUpRequest signUpRequest){
+        MemberEntity entityByPhoneNumber = memberRepository.selectByPhoneNum(signUpRequest.getPhoneNum());
+        if(entityByPhoneNumber != null){
+            throw new PhoneNumberDuplicatedException();
+        }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate birthday = LocalDate.parse(signUpRequest.getBirthday(), formatter);
+        String hashedPassword = BCrypt.hashpw(signUpRequest.getPassword(), BCrypt.gensalt());
 
         MemberEntity member = MemberEntity.builder()
                 .phoneNum(signUpRequest.getPhoneNum())
-                .password(hashPassword(signUpRequest.getPassword()))
+                .password(hashedPassword)
                 .nickname(signUpRequest.getNickname())
                 .birthday(birthday)
                 .gender(signUpRequest.getGender())

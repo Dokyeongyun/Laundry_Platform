@@ -1,5 +1,7 @@
 package com.coders.laundry.controller;
 
+import com.coders.laundry.domain.exceptions.NicknameDuplicatedException;
+import com.coders.laundry.domain.exceptions.PhoneNumberDuplicatedException;
 import com.coders.laundry.dto.ErrorResponse;
 import com.coders.laundry.dto.SignUpRequest;
 import com.coders.laundry.service.SignUpService;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -17,16 +22,20 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
-    @PostMapping("/api/signup")
+    @PostMapping("/api/member")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
 
-        if(!signUpService.phoneNumDoubleCheck(signUpRequest.getPhoneNum()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 존재하는 휴대폰번호"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate birthday = LocalDate.parse(signUpRequest.getBirthday(), formatter);
 
-        if(!signUpService.nicknameDoubleCheck(signUpRequest.getNickname()))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("이미 존재하는 닉네임"));
+        try {
+            signUpService.signUp(signUpRequest, birthday);
+        }catch (NicknameDuplicatedException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("중복된 닉네임"));
+        }catch (PhoneNumberDuplicatedException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("중복된 휴대폰번호"));
+        }
 
-        signUpService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }

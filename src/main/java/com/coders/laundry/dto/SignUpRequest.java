@@ -8,9 +8,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequest {
+
     private String phoneNum;
+
     private String password;
+
     private String nickname;
+
     private String birthday;
+
     private String gender;
+
 }
