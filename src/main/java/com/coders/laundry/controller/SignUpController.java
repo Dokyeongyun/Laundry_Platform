@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -22,7 +23,7 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
-    @PostMapping("/api/member")
+    @PostMapping("/api/members")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
