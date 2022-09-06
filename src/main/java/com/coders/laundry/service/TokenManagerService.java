@@ -1,8 +1,6 @@
 package com.coders.laundry.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,13 +22,37 @@ public class TokenManagerService {
     private long refreshTokenValidTime;
 
     public boolean verify(String token){
-        // TODO implement
-        return !token.equals("Bearer fail");
+        try { //문제없는 경우
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) { //토큰이 만료된 경우
+            System.out.println("Token Expired");
+            return false;
+        } catch (JwtException e) {//토큰이 변조된 경우
+            System.out.println("Token Error");
+            return false;
+        }
+        //return !token.equals("Bearer fail");
     }
 
     public int findMemberId(String token) {
-        // TODO implement
-        return 1;
+        String id = Jwts.parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
+        return Integer.parseInt(id);
+    }
+
+    public Claims getTokenContents(String token){
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(token)
+                .getBody();
+        return claims;
     }
 
     public String createToken(int memberId) {
