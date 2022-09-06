@@ -8,12 +8,20 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class ReviewEntity {
-    private int reviewId;
-    private int laundryId;
-    private int writer;
-    private String title;
+
+    private Integer reviewId;
+
+    private Integer laundryId;
+
+    private Integer writerId;
+
+    /* Range: 1 ~ 5 */
+    private int rating;
+
     private String contents;
+
     private LocalDateTime createDate;
-    private int likeNum;
+
     private LocalDateTime updateDate;
+
 }

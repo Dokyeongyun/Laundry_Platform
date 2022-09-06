@@ -42,12 +42,11 @@ CREATE TABLE review (
         PRIMARY KEY (review_id),
         review_id    INT            NOT NULL AUTO_INCREMENT,
         laundry_id   INT            NOT NULL,
-        writer       INT            NOT NULL,
-        title        VARCHAR(50)    NOT NULL,
+        writer_id    INT            NOT NULL,
         contents     VARCHAR(300)   NOT NULL,
+        rating       INT            NOT NULL DEFAULT 1,
         create_date  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        like_num     INT            NOT NULL DEFAULT 0,
-        update_date  DATETIME
+        update_date  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE category (
