@@ -8,17 +8,17 @@
             keyProperty="reviewId"
             keyColumn="review_id">
         INSERT INTO review (
-               laundry_id, writer_id, rating, contents
+               laundry_id, writer_id, rating, contents, visit_date
                )
         VALUES (
-               #{laundryId}, #{writerId}, #{rating}, #{contents}
+               #{laundryId}, #{writerId}, #{rating}, #{contents}, #{visitDate}
                );
     </insert>
 
     <select id="selectById" parameterType="int"
             resultType="ReviewEntity">
         SELECT review_id, laundry_id, writer_id, rating,
-               contents, create_date, update_date
+               contents, visit_date, create_date, update_date
           FROM review
          WHERE review_id = #{reviewId};
     </select>

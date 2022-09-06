@@ -1,14 +1,14 @@
-package com.coders.laundry.domain.entity;
+package com.coders.laundry.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
-public class ReviewEntity {
+public class Review {
 
     private Integer reviewId;
 

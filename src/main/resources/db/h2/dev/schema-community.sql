@@ -45,6 +45,7 @@ CREATE TABLE review (
         writer_id    INT            NOT NULL,
         contents     VARCHAR(300)   NOT NULL,
         rating       INT            NOT NULL DEFAULT 1,
+        visit_date   DATE,
         create_date  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
         update_date  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -27,6 +29,7 @@ class ReviewRepositoryTest {
                 .writerId(1)
                 .contents("이 빨래방은 정말.....")
                 .rating(5)
+                .visitDate(LocalDate.of(2022, 9, 6))
                 .build();
 
         // Act
@@ -45,6 +48,7 @@ class ReviewRepositoryTest {
                 .writerId(1)
                 .contents("이 빨래방은 정말.....")
                 .rating(5)
+                .visitDate(LocalDate.of(2022, 9, 6))
                 .build();
 
         reviewRepository.insert(entity);
@@ -59,6 +63,7 @@ class ReviewRepositoryTest {
         assertEquals(entity.getWriterId(), result.getWriterId());
         assertEquals(entity.getContents(), result.getContents());
         assertEquals(entity.getRating(), result.getRating());
+        assertEquals(entity.getVisitDate(), result.getVisitDate());
         assertNotNull(result.getCreateDate());
         assertNotNull(result.getUpdateDate());
     }
@@ -71,6 +76,7 @@ class ReviewRepositoryTest {
                 .writerId(1)
                 .contents("이 빨래방은 정말.....")
                 .rating(5)
+                .visitDate(LocalDate.of(2022, 9, 6))
                 .build();
 
         reviewRepository.insert(entity);
