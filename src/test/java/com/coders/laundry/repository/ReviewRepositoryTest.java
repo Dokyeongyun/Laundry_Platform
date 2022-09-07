@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,15 +44,7 @@ class ReviewRepositoryTest {
     @Test
     void selectById() {
         // Arrange
-        ReviewEntity entity = ReviewEntity.builder()
-                .laundryId(1)
-                .writerId(1)
-                .contents("이 빨래방은 정말.....")
-                .rating(5)
-                .visitDate(LocalDate.of(2022, 9, 6))
-                .build();
-
-        reviewRepository.insert(entity);
+        ReviewEntity entity = insertReviewEntity(1, 1);
 
         // Act
         ReviewEntity result = reviewRepository.selectById(entity.getReviewId());
@@ -91,15 +84,7 @@ class ReviewRepositoryTest {
     @Test
     void selectByLaundryIdAndWriterId() {
         // Arrange
-        ReviewEntity entity = ReviewEntity.builder()
-                .laundryId(1)
-                .writerId(1)
-                .contents("이 빨래방은 정말.....")
-                .rating(5)
-                .visitDate(LocalDate.of(2022, 9, 6))
-                .build();
-
-        reviewRepository.insert(entity);
+        ReviewEntity entity = insertReviewEntity(1, 1);
 
         // Act
         ReviewEntity result = reviewRepository
@@ -115,6 +100,41 @@ class ReviewRepositoryTest {
         assertEquals(entity.getVisitDate(), result.getVisitDate());
         assertEquals(entity.getCreateDate(), result.getCreateDate());
         assertEquals(entity.getUpdateDate(), result.getUpdateDate());
+    }
+
+    @Test
+    void selectAllByLaundryId() {
+        // Arrange
+        int reviewCount = 10;
+        Integer laundryId = 2;
+        for (int i = 0; i < reviewCount; i++) {
+            insertReviewEntity(laundryId, i + 1);
+        }
+
+        // Act
+        List<ReviewEntity> result = reviewRepository.selectAllByLaundryId(laundryId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(reviewCount, result.size());
+        for (ReviewEntity reviewEntity : result) {
+            assertEquals(laundryId, reviewEntity.getLaundryId());
+        }
+    }
+
+    private ReviewEntity insertReviewEntity(Integer laundryId, Integer writerId) {
+        LocalDate visitDate = LocalDate.now();
+        ReviewEntity entity = ReviewEntity.builder()
+                .laundryId(laundryId)
+                .writerId(writerId)
+                .contents("testContents")
+                .rating(5)
+                .visitDate(visitDate)
+                .build();
+
+        reviewRepository.insert(entity);
+
+        return entity;
     }
 
 }

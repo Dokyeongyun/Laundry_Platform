@@ -13,6 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -32,7 +35,23 @@ class ReviewServiceTest {
     }
 
     @Test
-    void save() {
+    void findAllByLaundryId() {
+        // Arrange
+        int reviewCount = 5;
+        Integer laundryId = 1;
+        List<ReviewEntity> reviews = getReviewEntityDummy(reviewCount, laundryId, 1);
+        when(reviewRepository.selectAllByLaundryId(laundryId)).thenReturn(reviews);
+
+        // Act
+        List<Review> result = reviewService.findAllByLaundryId(laundryId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(reviewCount, result.size());
+    }
+
+    @Test
+    void upload() {
         // Arrange
         Integer writerId = 1;
         ReviewUploadRequest request = ReviewUploadRequest.builder()
@@ -76,7 +95,7 @@ class ReviewServiceTest {
         when(reviewRepository.selectById(createdReviewId)).thenReturn(created);
 
         // Act
-        Review result = reviewService.save(writerId, request);
+        Review result = reviewService.upload(writerId, request);
 
         // Assert
         assertNotNull(result.getReviewId());
@@ -90,7 +109,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void save_ResourceAlreadyExistsException() {
+    void upload_ResourceAlreadyExistsException() {
         // Arrange
         Integer writerId = 1;
         ReviewUploadRequest request = ReviewUploadRequest.builder()
@@ -117,8 +136,23 @@ class ReviewServiceTest {
 
         // Act & Assert
         assertThrows(ResourceAlreadyExistsException.class, () -> {
-            reviewService.save(writerId, request);
+            reviewService.upload(writerId, request);
         });
     }
 
+    private List<ReviewEntity> getReviewEntityDummy(int dummyCount, Integer laundryId, Integer writerId) {
+        Random random = new Random();
+        List<ReviewEntity> reviews = new ArrayList<>();
+        for (int i = 0; i < dummyCount; i++) {
+            ReviewEntity entity = ReviewEntity.builder()
+                    .laundryId(laundryId)
+                    .writerId(writerId)
+                    .rating(random.nextInt(5))
+                    .contents("testReviewContents")
+                    .visitDate(LocalDate.now())
+                    .build();
+            reviews.add(entity);
+        }
+        return reviews;
+    }
 }

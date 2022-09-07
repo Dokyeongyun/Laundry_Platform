@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -21,10 +22,18 @@ public class ReviewController {
 
     private final TokenManagerService tokenManagerService;
 
+    @GetMapping(value = "/laundries/{laundryId}/reviews",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findLaundryReviewsByLaundryId(@PathVariable Integer laundryId) {
+        List<Review> reviews = reviewService.findAllByLaundryId(laundryId);
+        return ResponseEntity.ok().body(reviews);
+    }
+
     @PostMapping(value = "/laundries/{laundryId}/reviews",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> save(
+    public ResponseEntity<?> uploadLaundryReview(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,
             @PathVariable Integer laundryId,
             @Valid @RequestBody ReviewUploadRequest reviewUploadRequest
@@ -43,9 +52,9 @@ public class ReviewController {
         }
 
         Integer memberId = tokenManagerService.findMemberId(token);
-        Review createdReview = reviewService.save(memberId, reviewUploadRequest);
+        Review createdReview = reviewService.upload(memberId, reviewUploadRequest);
 
         return ResponseEntity.ok().body(createdReview);
     }
-    
+
 }

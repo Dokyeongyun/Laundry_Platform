@@ -40,4 +40,12 @@
                AND writer_id = #{writerId};
     </select>
 
+    <select id="selectAllByLaundryId"
+            resultType="ReviewEntity">
+        SELECT review_id, laundry_id, writer_id, rating,
+               contents, visit_date, create_date, update_date
+          FROM review
+         WHERE laundry_id = #{laundryId};
+    </select>
+
 </mapper>

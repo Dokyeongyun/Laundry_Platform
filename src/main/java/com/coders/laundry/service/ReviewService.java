@@ -12,6 +12,9 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Validated
@@ -20,9 +23,20 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
-    @Transactional
     @Validated
-    public Review save(@NotNull Integer writerId, @Valid ReviewUploadRequest request) {
+    @Transactional(readOnly = true)
+    public List<Review> findAllByLaundryId(@NotNull Integer laundryId) {
+        // TODO Validate the existence of laundry by id
+        List<ReviewEntity> entities = reviewRepository.selectAllByLaundryId(laundryId);
+        return entities
+                .stream()
+                .map(ReviewEntity::toDto)
+                .collect(toList());
+    }
+
+    @Validated
+    @Transactional
+    public Review upload(@NotNull Integer writerId, @Valid ReviewUploadRequest request) {
         // TODO Validate the existence of members
 
         ReviewEntity existedReview = reviewRepository
