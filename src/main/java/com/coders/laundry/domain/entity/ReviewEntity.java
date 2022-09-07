@@ -1,5 +1,6 @@
 package com.coders.laundry.domain.entity;
 
+import com.coders.laundry.dto.Review;
 import lombok.Builder;
 import lombok.Data;
 
@@ -26,5 +27,18 @@ public class ReviewEntity {
     private LocalDateTime createDate;
 
     private LocalDateTime updateDate;
+
+    public static Review toDto(ReviewEntity entity) {
+        return Review.builder()
+                .reviewId(entity.getReviewId())
+                .laundryId(entity.getLaundryId())
+                .writerId(entity.getWriterId())
+                .rating(entity.getRating())
+                .contents(entity.getContents())
+                .visitDate(entity.getVisitDate())
+                .createDate(entity.getCreateDate())
+                .updateDate(entity.getUpdateDate())
+                .build();
+    }
 
 }

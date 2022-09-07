@@ -5,8 +5,8 @@
     <insert id="insert"
             parameterType="ReviewEntity"
             useGeneratedKeys="true"
-            keyProperty="reviewId"
-            keyColumn="review_id">
+            keyProperty="reviewId,createDate,updateDate"
+            keyColumn="review_id,create_date,update_date">
         INSERT INTO review (
                laundry_id, writer_id, rating, contents, visit_date
                )
@@ -15,7 +15,8 @@
                );
     </insert>
 
-    <select id="selectById" parameterType="int"
+    <select id="selectById"
+            parameterType="Integer"
             resultType="ReviewEntity">
         SELECT review_id, laundry_id, writer_id, rating,
                contents, visit_date, create_date, update_date
@@ -24,10 +25,19 @@
     </select>
 
     <delete id="deleteById"
-            parameterType="int">
+            parameterType="Integer">
         DELETE
           FROM review
          WHERE review_id = #{reviewId};
     </delete>
+
+    <select id="selectByLaundryIdAndWriterId"
+            resultType="ReviewEntity">
+        SELECT review_id, laundry_id, writer_id, rating,
+               contents, visit_date, create_date, update_date
+          FROM review
+         WHERE laundry_id = #{laundryId}
+               AND writer_id = #{writerId};
+    </select>
 
 </mapper>

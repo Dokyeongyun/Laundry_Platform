@@ -64,8 +64,8 @@ class ReviewRepositoryTest {
         assertEquals(entity.getContents(), result.getContents());
         assertEquals(entity.getRating(), result.getRating());
         assertEquals(entity.getVisitDate(), result.getVisitDate());
-        assertNotNull(result.getCreateDate());
-        assertNotNull(result.getUpdateDate());
+        assertEquals(entity.getCreateDate(), result.getCreateDate());
+        assertEquals(entity.getUpdateDate(), result.getUpdateDate());
     }
 
     @Test
@@ -86,6 +86,35 @@ class ReviewRepositoryTest {
 
         // Assert
         assertEquals(1, result);
+    }
+
+    @Test
+    void selectByLaundryIdAndWriterId() {
+        // Arrange
+        ReviewEntity entity = ReviewEntity.builder()
+                .laundryId(1)
+                .writerId(1)
+                .contents("이 빨래방은 정말.....")
+                .rating(5)
+                .visitDate(LocalDate.of(2022, 9, 6))
+                .build();
+
+        reviewRepository.insert(entity);
+
+        // Act
+        ReviewEntity result = reviewRepository
+                .selectByLaundryIdAndWriterId(entity.getLaundryId(), entity.getWriterId());
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(entity.getReviewId(), result.getReviewId());
+        assertEquals(entity.getLaundryId(), result.getLaundryId());
+        assertEquals(entity.getWriterId(), result.getWriterId());
+        assertEquals(entity.getContents(), result.getContents());
+        assertEquals(entity.getRating(), result.getRating());
+        assertEquals(entity.getVisitDate(), result.getVisitDate());
+        assertEquals(entity.getCreateDate(), result.getCreateDate());
+        assertEquals(entity.getUpdateDate(), result.getUpdateDate());
     }
 
 }
