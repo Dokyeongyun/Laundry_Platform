@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.DeviceTokenRepository">
+
+    <resultMap id="deviceTokenEntityMap" type="DeviceTokenEntity">
+        <result column="member_id" property="memberId"/>
+        <result column="token" property="token"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="selectByMemberId" parameterType="int" resultType="deviceTokenEntity">
+        SELECT member_id, token, device_type, created_at
+        FROM device_tokens
+        WHERE member_id = #{memberId};
+    </select>
+
+    <insert id="save">
+        INSERT INTO device_tokens(member_id, token, device_type)
+        VALUES (#{memberId}, #{token}, #{deviceType})
+    </insert>
+</mapper>

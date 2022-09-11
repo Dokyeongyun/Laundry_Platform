@@ -37,3 +37,5 @@ logging:
 data:
   laundry: classpath:data/laundry*.json
 
+fcm:
+  path: ${Home}/fcm/laundry-coder-firebase.json
