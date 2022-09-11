@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/search")
@@ -30,7 +29,6 @@ public class SearchHistoryController {
             @RequestHeader("Authorization") String token,
             @Validated(SearchHistorySortGroup.class) Pageable pageable
     ) {
-
         // TODO verify token value and retrieve user details (ex.memberId)
         if (!tokenManagerService.verify(token)) {
             return ResponseEntity
@@ -39,10 +37,7 @@ public class SearchHistoryController {
         }
 
         int memberId = tokenManagerService.findMemberId(token);
-        int totalCount = searchHistoryService.findCountByMemberId(memberId);
-        List<SearchHistory> list = searchHistoryService.findByMemberId(memberId, pageable);
-
-        Page<SearchHistory> page = new Page<>(totalCount, pageable, list);
+        Page<SearchHistory> page = searchHistoryService.findPageByMemberId(memberId, pageable);
 
         return ResponseEntity.ok().body(page);
     }
@@ -67,12 +62,12 @@ public class SearchHistoryController {
         return ResponseEntity.ok().body(searchHistory);
     }
 
-    @DeleteMapping(value = "/histories",
+    @DeleteMapping(value = "/histories/{searchHistoryId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> remove(
             @RequestHeader("Authorization") String token,
-            @Valid @RequestBody SearchHistoryRemoveRequest searchHistoryRemoveRequest
+            @PathVariable Integer searchHistoryId
     ) {
         // TODO verify token value and retrieve user details if token is present(ex.memberId)
         if (token != null && !tokenManagerService.verify(token)) {
@@ -82,7 +77,7 @@ public class SearchHistoryController {
         }
 
         int memberId = tokenManagerService.findMemberId(token);
-        searchHistoryService.remove(memberId, searchHistoryRemoveRequest);
+        searchHistoryService.remove(memberId, searchHistoryId);
 
         return ResponseEntity.noContent().build();
     }

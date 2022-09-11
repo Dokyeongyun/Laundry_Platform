@@ -3,16 +3,17 @@ package com.coders.laundry.service;
 import com.coders.laundry.common.validation.SearchHistorySortGroup;
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
+import com.coders.laundry.dto.Page;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
-import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,8 @@ public class SearchHistoryService {
     }
 
     @Validated(SearchHistorySortGroup.class)
-    public List<SearchHistory> findByMemberId(int memberId,
-                                              @Valid Pageable pageable) {
+    public Page<SearchHistory> findPageByMemberId(int memberId,
+                                                  @Valid Pageable pageable) {
 
         String sort = pageable.getSort();
         String sortType = pageable.getSortType();
@@ -40,6 +41,8 @@ public class SearchHistoryService {
         if (sortType.equals("desc")) {
             sort = "-" + sort;
         }
+
+        int totalCount = findCountByMemberId(memberId);
 
         List<SearchHistoryEntity> list = searchHistoryRepository.selectListByMemberId(
                 memberId, pageable.getOffset(), pageable.getLimit(), sort);
@@ -53,7 +56,7 @@ public class SearchHistoryService {
             result.add(new SearchHistory(searchHistoryId, keyword, type, createDate));
         }
 
-        return result;
+        return new Page<>(totalCount, pageable, result);
     }
 
     public SearchHistory save(int memberId, @Valid SearchHistoryRegisterRequest request) {
@@ -74,12 +77,12 @@ public class SearchHistoryService {
                 .build();
     }
 
-    public void remove(int memberId, @Valid SearchHistoryRemoveRequest request) {
-        SearchHistoryEntity entity = searchHistoryRepository.selectById(request.getSearchHistoryId());
+    public void remove(int memberId, @NotNull Integer searchHistoryId) {
+        SearchHistoryEntity entity = searchHistoryRepository.selectById(searchHistoryId);
         if (entity == null || memberId != entity.getSearchMemberId()) {
             throw new NotAuthorizedException();
         }
 
-        searchHistoryRepository.delete(request.getSearchHistoryId());
+        searchHistoryRepository.delete(searchHistoryId);
     }
 }

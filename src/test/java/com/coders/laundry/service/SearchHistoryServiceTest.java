@@ -2,27 +2,28 @@ package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.SearchHistoryEntity;
 import com.coders.laundry.domain.exceptions.NotAuthorizedException;
+import com.coders.laundry.dto.Page;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchHistory;
 import com.coders.laundry.dto.SearchHistoryRegisterRequest;
-import com.coders.laundry.dto.SearchHistoryRemoveRequest;
 import com.coders.laundry.repository.SearchHistoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @ActiveProfiles("dev")
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 class SearchHistoryServiceTest {
 
     private SearchHistoryService searchHistoryService;
@@ -48,7 +49,7 @@ class SearchHistoryServiceTest {
     }
 
     @Test
-    void findByMemberId() {
+    void findPageByMemberId() {
         // Arrange
         int memberId = 1;
         int offset = 0;
@@ -58,12 +59,26 @@ class SearchHistoryServiceTest {
 
         Pageable pageable = new Pageable(offset, limit, sort, sortType);
 
+        sort = "create_date";
+        sort = "-" + sort;
+
+        SearchHistoryEntity history = SearchHistoryEntity.builder()
+                .searchHistoryId(1)
+                .keyword("테스트")
+                .type("laundry")
+                .createDate(LocalDateTime.now())
+                .build();
+        List<SearchHistoryEntity> list = new ArrayList<>(List.of(history));
+
+        when(searchHistoryRepository.selectListByMemberId(memberId, pageable.getOffset(), pageable.getLimit(), sort))
+                .thenReturn(list);
+
         // Act
-        List<SearchHistory> result = searchHistoryService.findByMemberId(memberId, pageable);
+        Page<SearchHistory> result = searchHistoryService.findPageByMemberId(memberId, pageable);
 
         // Assert
         assertNotNull(result);
-        assertTrue(result.size() <= limit);
+        assertTrue(result.getList().size() <= limit);
     }
 
     @Test
@@ -104,21 +119,21 @@ class SearchHistoryServiceTest {
     void remove() {
         // Assert
         int memberId = 1;
-        SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(1);
+        int searchHistoryId = 1;
 
         SearchHistoryEntity entity = SearchHistoryEntity.builder()
-                .searchHistoryId(1)
+                .searchHistoryId(searchHistoryId)
                 .keyword("테스트")
                 .type("laundry")
                 .searchMemberId(memberId)
                 .createDate(LocalDateTime.now())
                 .build();
 
-        when(searchHistoryRepository.selectById(request.getSearchHistoryId())).thenReturn(entity);
-        when(searchHistoryRepository.delete(request.getSearchHistoryId())).thenReturn(1);
+        when(searchHistoryRepository.selectById(searchHistoryId)).thenReturn(entity);
+        when(searchHistoryRepository.delete(searchHistoryId)).thenReturn(1);
 
         // Act
-        searchHistoryService.remove(memberId, request);
+        searchHistoryService.remove(memberId, searchHistoryId);
 
         // Assert
         // noting to assert
@@ -128,21 +143,21 @@ class SearchHistoryServiceTest {
     void remove_NotAuthorizedException() {
         // Assert
         int memberId = 1;
-        SearchHistoryRemoveRequest request = new SearchHistoryRemoveRequest(1);
+        int searchHistoryId = 1;
 
         SearchHistoryEntity entity = SearchHistoryEntity.builder()
-                .searchHistoryId(1)
+                .searchHistoryId(searchHistoryId)
                 .keyword("테스트")
                 .type("laundry")
                 .searchMemberId(memberId + 10)
                 .createDate(LocalDateTime.now())
                 .build();
 
-        when(searchHistoryRepository.selectById(request.getSearchHistoryId())).thenReturn(entity);
+        when(searchHistoryRepository.selectById(searchHistoryId)).thenReturn(entity);
 
         // Act & Assert
         assertThrows(NotAuthorizedException.class,
-                () -> searchHistoryService.remove(memberId, request)
+                () -> searchHistoryService.remove(memberId, searchHistoryId)
         );
     }
 }
