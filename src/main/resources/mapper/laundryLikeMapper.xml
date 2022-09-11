@@ -35,4 +35,13 @@
           FROM laundry_like
          WHERE laundry_like_id = #{laundryLikeId}
     </delete>
+
+    <select id="selectByMember"
+            parameterType="int"
+            resultType="LaundryLikeEntity">
+        SELECT laundry_like_id, member_id, laundry_id, like_date
+          FROM laundry_like
+         WHERE member_id = #{memberId}
+    </select>
+
 </mapper>

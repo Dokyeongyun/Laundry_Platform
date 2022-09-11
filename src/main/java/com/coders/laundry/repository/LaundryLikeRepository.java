@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 @Mapper
 @Repository
 public interface LaundryLikeRepository {
@@ -12,4 +14,6 @@ public interface LaundryLikeRepository {
     LaundryLikeEntity selectById(@Param("laundryLikeId") int laundryLikeId);
     int update(LaundryLikeEntity laundryLikeEntity);
     int delete(@Param("laundryLikeId")int laundryLikeId);
+    ArrayList<LaundryLikeEntity> selectByMember(int memberId);
+
 }

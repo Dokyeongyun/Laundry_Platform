@@ -17,6 +17,6 @@ data:
   laundry: classpath:data/laundry*.json
 
 jwt:
-  secretKey: laundryJwtSecret
+  secretKey: laundryJwtSecret1239i0289wfojq0298409qmcwio
   accessValidTime: 3600000
   refreshValidTime: 86400000
