@@ -19,7 +19,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/{memberId}/laundries/likes")
-    public ResponseEntity<?> findMyLikes(@RequestHeader String token, @PathVariable(value = "memberId") int memberId){
+    public ResponseEntity<?> findMyLikes(@RequestHeader(value = "Authorization") String token, @PathVariable(value = "memberId") int memberId){
+
         if(token == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청. 토큰미전송");
         }
