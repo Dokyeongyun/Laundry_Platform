@@ -53,6 +53,4 @@
         FROM member
         WHERE phone_num = #{phoneNum}
     </select>
-
-
 </mapper>
