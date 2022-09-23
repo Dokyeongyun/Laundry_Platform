@@ -2,12 +2,14 @@ package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.ReviewEntity;
 import com.coders.laundry.domain.exceptions.ResourceAlreadyExistsException;
+import com.coders.laundry.dto.Laundry;
 import com.coders.laundry.dto.Review;
 import com.coders.laundry.dto.ReviewUploadRequest;
 import com.coders.laundry.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -15,10 +17,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
@@ -26,12 +28,15 @@ class ReviewServiceTest {
 
     private ReviewService reviewService;
 
+    @Mock
     private ReviewRepository reviewRepository;
+
+    @Mock
+    private LaundryFindService laundryFindService;
 
     @BeforeEach
     public void setup() {
-        reviewRepository = mock(ReviewRepository.class);
-        reviewService = new ReviewService(reviewRepository);
+        reviewService = new ReviewService(reviewRepository, laundryFindService);
     }
 
     @Test
@@ -39,7 +44,9 @@ class ReviewServiceTest {
         // Arrange
         int reviewCount = 5;
         Integer laundryId = 1;
+        Laundry targetLaundry = createReviewTargetLaundry(12345);
         List<ReviewEntity> reviews = getReviewEntityDummy(reviewCount, laundryId, 1);
+        when(laundryFindService.findById(laundryId)).thenReturn(Optional.ofNullable(targetLaundry));
         when(reviewRepository.selectAllByLaundryId(laundryId)).thenReturn(reviews);
 
         // Act
@@ -48,6 +55,18 @@ class ReviewServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(reviewCount, result.size());
+    }
+
+    @Test
+    void findAllByLaundryId_WhenLaundryNotFound() {
+        // Arrange
+        Integer laundryId = 1;
+        when(laundryFindService.findById(laundryId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            reviewService.findAllByLaundryId(laundryId);
+        });
     }
 
     @Test
@@ -92,6 +111,8 @@ class ReviewServiceTest {
                 .updateDate(createdAt)
                 .build();
 
+        Laundry laundry = createReviewTargetLaundry(request.getLaundryId());
+        when(laundryFindService.findById(request.getLaundryId())).thenReturn(Optional.ofNullable(laundry));
         when(reviewRepository.selectById(createdReviewId)).thenReturn(created);
 
         // Act
@@ -106,6 +127,25 @@ class ReviewServiceTest {
         assertEquals(request.getVisitDate(), result.getVisitDate());
         assertNotNull(result.getCreateDate());
         assertNotNull(result.getUpdateDate());
+    }
+
+    @Test
+    void upload_LaundryIsNotFound() {
+        // Arrange
+        Integer writerId = 1;
+        ReviewUploadRequest request = ReviewUploadRequest.builder()
+                .laundryId(11254)
+                .rating(5)
+                .contents("리뷰 내용입니다.")
+                .visitDate(LocalDate.of(2022, 9, 6))
+                .build();
+
+        when(laundryFindService.findById(request.getLaundryId())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            reviewService.upload(writerId, request);
+        });
     }
 
     @Test
@@ -131,13 +171,20 @@ class ReviewServiceTest {
                 .updateDate(createdAt)
                 .build();
 
+        Laundry laundry = createReviewTargetLaundry(124);
+        when(laundryFindService.findById(request.getLaundryId())).thenReturn(Optional.of(laundry));
         when(reviewRepository.selectByLaundryIdAndWriterId(request.getLaundryId(), writerId))
                 .thenReturn(exists);
 
         // Act & Assert
-        assertThrows(ResourceAlreadyExistsException.class, () -> {
-            reviewService.upload(writerId, request);
-        });
+        assertThrows(ResourceAlreadyExistsException.class, () -> reviewService.upload(writerId, request));
+    }
+
+    private Laundry createReviewTargetLaundry(Integer laundryId) {
+        return Laundry.builder()
+                .laundryId(laundryId)
+                .name("리뷰 테스트 빨래방")
+                .build();
     }
 
     private List<ReviewEntity> getReviewEntityDummy(int dummyCount, Integer laundryId, Integer writerId) {

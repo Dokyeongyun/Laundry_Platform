@@ -23,10 +23,13 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
+    private final LaundryFindService laundryFindService;
+
     @Validated
     @Transactional(readOnly = true)
     public List<Review> findAllByLaundryId(@NotNull Integer laundryId) {
-        // TODO Validate the existence of laundry by id
+        // TODO Throw EntityNotFoundException after defining global exception handler
+        laundryFindService.findById(laundryId).orElseThrow();
         List<ReviewEntity> entities = reviewRepository.selectAllByLaundryId(laundryId);
         return entities
                 .stream()
@@ -38,7 +41,7 @@ public class ReviewService {
     @Transactional
     public Review upload(@NotNull Integer writerId, @Valid ReviewUploadRequest request) {
         // TODO Validate the existence of members
-
+        laundryFindService.findById(request.getLaundryId()).orElseThrow();
         ReviewEntity existedReview = reviewRepository
                 .selectByLaundryIdAndWriterId(request.getLaundryId(), writerId);
         if (existedReview != null) {
