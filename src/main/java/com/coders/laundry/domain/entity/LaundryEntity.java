@@ -1,5 +1,6 @@
 package com.coders.laundry.domain.entity;
 
+import com.coders.laundry.dto.Laundry;
 import lombok.*;
 
 import java.util.List;
@@ -27,4 +28,22 @@ public class LaundryEntity {
     private List<String> tags;
     private int distance;
     private boolean like;
+
+    public static Laundry toDto(LaundryEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return Laundry.builder()
+                .laundryId(entity.laundryId)
+                .name(entity.name)
+                .jibunAddress(entity.jibunAddress)
+                .jibunAddressDetail(entity.jibunAddressDetail)
+                .doroAddress(entity.doroAddress)
+                .doroAddressDetail(entity.doroAddressDetail)
+                .latitude(entity.latitude)
+                .longitude(entity.longitude)
+                .partnership(entity.partnership)
+                .build();
+    }
 }

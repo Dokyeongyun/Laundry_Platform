@@ -1,17 +1,17 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.LaundryEntity;
+import com.coders.laundry.dto.Laundry;
 import com.coders.laundry.dto.LocationSearch;
 import com.coders.laundry.dto.Pageable;
 import com.coders.laundry.dto.SearchedLaundry;
 import com.coders.laundry.repository.LaundryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +19,13 @@ public class LaundryFindService {
 
     private final LaundryRepository laundryRepository;
 
+    @Transactional(readOnly = true)
+    public Optional<Laundry> findById(@NotNull Integer laundryId) {
+        LaundryEntity entity = laundryRepository.selectById(laundryId);
+        return Optional.ofNullable(LaundryEntity.toDto(entity));
+    }
+
+    @Transactional(readOnly = true)
     public int findCount(String keyword,
                          LocationSearch locationSearch,
                          String searchMode) {
@@ -32,6 +39,7 @@ public class LaundryFindService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<SearchedLaundry> search(int memberId,
                                         String keyword,
                                         LocationSearch locationSearch,
@@ -56,7 +64,7 @@ public class LaundryFindService {
             case "point" -> list.sort(Comparator.comparing(LaundryEntity::getRatingPoint));
         }
 
-        if(sortType.equals("desc")) {
+        if (sortType.equals("desc")) {
             Collections.reverse(list);
         }
 
