@@ -1,10 +1,7 @@
 package com.coders.laundry.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +13,7 @@ import java.time.LocalDate;
 
 @Builder
 @Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewUploadRequest {

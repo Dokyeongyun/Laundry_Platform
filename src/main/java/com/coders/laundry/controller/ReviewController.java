@@ -1,6 +1,8 @@
 package com.coders.laundry.controller;
 
-import com.coders.laundry.dto.*;
+import com.coders.laundry.dto.ErrorResponse;
+import com.coders.laundry.dto.Review;
+import com.coders.laundry.dto.ReviewUploadRequest;
 import com.coders.laundry.service.ReviewService;
 import com.coders.laundry.service.TokenManagerService;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +64,14 @@ public class ReviewController {
                         .buildAndExpand(createdReview.getReviewId())
                         .toUri())
                 .body(createdReview);
+    }
+
+    // TODO Move to global exception handler
+    @ExceptionHandler(RuntimeException.class)
+    private ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(e.getMessage()));
     }
 
 }
