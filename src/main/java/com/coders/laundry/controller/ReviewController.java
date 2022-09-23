@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -54,7 +55,13 @@ public class ReviewController {
         Integer memberId = tokenManagerService.findMemberId(token);
         Review createdReview = reviewService.upload(memberId, reviewUploadRequest);
 
-        return ResponseEntity.ok().body(createdReview);
+        return ResponseEntity
+                .created(ServletUriComponentsBuilder
+                        .fromCurrentRequest()
+                        .path("/{reviewId}")
+                        .buildAndExpand(createdReview.getReviewId())
+                        .toUri())
+                .body(createdReview);
     }
 
 }
