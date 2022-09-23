@@ -43,7 +43,7 @@ public class ReviewService {
         // TODO Validate the existence of members
         laundryFindService.findById(request.getLaundryId()).orElseThrow();
         ReviewEntity existedReview = reviewRepository
-                .selectByLaundryIdAndWriterId(request.getLaundryId(), writerId);
+                .selectByLaundryIdAndWriterIdAndVisitDate(request.getLaundryId(), writerId, request.getVisitDate());
         if (existedReview != null) {
             throw new ResourceAlreadyExistsException("Review");
         }

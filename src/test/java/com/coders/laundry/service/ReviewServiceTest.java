@@ -90,7 +90,11 @@ class ReviewServiceTest {
 
         int createdReviewId = 10;
         LocalDateTime createdAt = LocalDateTime.now();
-        when(reviewRepository.selectByLaundryIdAndWriterId(request.getLaundryId(), writerId)).thenReturn(null);
+        when(reviewRepository.selectByLaundryIdAndWriterIdAndVisitDate(
+                request.getLaundryId(),
+                writerId,
+                request.getVisitDate())
+        ).thenReturn(null);
         when(reviewRepository.insert(entity)).thenAnswer(invocation -> {
             Object[] arguments = invocation.getArguments();
             ReviewEntity argEntity = (ReviewEntity) arguments[0];
@@ -173,8 +177,11 @@ class ReviewServiceTest {
 
         Laundry laundry = createReviewTargetLaundry(124);
         when(laundryFindService.findById(request.getLaundryId())).thenReturn(Optional.of(laundry));
-        when(reviewRepository.selectByLaundryIdAndWriterId(request.getLaundryId(), writerId))
-                .thenReturn(exists);
+        when(reviewRepository.selectByLaundryIdAndWriterIdAndVisitDate(
+                request.getLaundryId(),
+                writerId,
+                request.getVisitDate())
+        ).thenReturn(exists);
 
         // Act & Assert
         assertThrows(ResourceAlreadyExistsException.class, () -> reviewService.upload(writerId, request));

@@ -87,8 +87,11 @@ class ReviewRepositoryTest {
         ReviewEntity entity = insertReviewEntity(1, 1);
 
         // Act
-        ReviewEntity result = reviewRepository
-                .selectByLaundryIdAndWriterId(entity.getLaundryId(), entity.getWriterId());
+        ReviewEntity result = reviewRepository.selectByLaundryIdAndWriterIdAndVisitDate(
+                entity.getLaundryId(),
+                entity.getWriterId(),
+                entity.getVisitDate()
+        );
 
         // Assert
         assertNotNull(result);

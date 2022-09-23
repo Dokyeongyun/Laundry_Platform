@@ -31,13 +31,14 @@
          WHERE review_id = #{reviewId};
     </delete>
 
-    <select id="selectByLaundryIdAndWriterId"
+    <select id="selectByLaundryIdAndWriterIdAndVisitDate"
             resultType="ReviewEntity">
         SELECT review_id, laundry_id, writer_id, rating,
                contents, visit_date, create_date, update_date
           FROM review
          WHERE laundry_id = #{laundryId}
-               AND writer_id = #{writerId};
+               AND writer_id = #{writerId}
+               AND visit_date = #{visitDate};
     </select>
 
     <select id="selectAllByLaundryId"
