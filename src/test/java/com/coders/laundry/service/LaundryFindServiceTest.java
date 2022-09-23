@@ -1,36 +1,60 @@
 package com.coders.laundry.service;
 
 import com.coders.laundry.domain.entity.LaundryEntity;
-import com.coders.laundry.dto.LocationSearch;
-import com.coders.laundry.dto.Pageable;
-import com.coders.laundry.dto.Point;
-import com.coders.laundry.dto.SearchedLaundry;
+import com.coders.laundry.dto.*;
 import com.coders.laundry.repository.LaundryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ActiveProfiles("dev")
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 class LaundryFindServiceTest {
 
     private LaundryFindService laundryFindService;
 
+    @Mock
     private LaundryRepository laundryRepository;
 
     @BeforeEach
     public void setup() {
-        laundryRepository = mock(LaundryRepository.class);
         laundryFindService = new LaundryFindService(laundryRepository);
+    }
+
+    @Test
+    void findById_WhenLaundryNotFound() {
+        // Arrange
+        int laundryId = 123;
+        when(laundryRepository.selectById(laundryId)).thenReturn(null);
+
+        // Act
+        Optional<Laundry> result = laundryFindService.findById(laundryId);
+
+        // Assert
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void findById_WhenLaundryExists() {
+        // Arrange
+        int laundryId = 123;
+        LaundryEntity laundry = LaundryEntity.builder().laundryId(laundryId).build();
+        when(laundryRepository.selectById(laundryId)).thenReturn(laundry);
+
+        // Act
+        Optional<Laundry> result = laundryFindService.findById(laundryId);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(laundryId, result.get().getLaundryId());
     }
 
     @Test
