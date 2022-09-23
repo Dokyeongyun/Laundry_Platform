@@ -6,9 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Builder
@@ -30,6 +28,7 @@ public class ReviewUploadRequest {
     private String contents;
 
     @NotNull
+    @PastOrPresent
     @JsonFormat(pattern = "yyyyMMdd")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyyMMdd")
     private LocalDate visitDate;
