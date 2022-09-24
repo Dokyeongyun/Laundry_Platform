@@ -2,6 +2,9 @@ DROP TABLE IF EXISTS laundry;
 DROP TABLE IF EXISTS facility;
 DROP TABLE IF EXISTS facility_holding;
 
+CREATE ALIAS IF NOT EXISTS H2GIS_SPATIAL FOR "org.h2gis.functions.factory.H2GISFunctions.load";
+CALL H2GIS_SPATIAL();
+
 CREATE TABLE laundry (
        PRIMARY KEY (laundry_id),
        laundry_id            INT                NOT NULL    AUTO_INCREMENT          COMMENT '빨래방ID',

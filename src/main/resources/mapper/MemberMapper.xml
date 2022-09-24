@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coders.laundry.repository.MemberRepository">
-    <select id="selectById" resultType="MemberEntity">
+    <select id="selectById"
+            resultType="MemberEntity">
         SELECT member_id, phone_num, password, nickname,
                birthday, gender, auto_login_yn, join_date, withdrawal_date
           FROM member
          WHERE member_id = #{memberId}
+    </select>
+
+    <insert id="insert"
+            parameterType="MemberEntity"
+            useGeneratedKeys="true"
+            keyProperty="memberId"
+            keyColumn="member_id">
+        INSERT INTO member (phone_num, password, nickname, birthday, gender)
+        VALUES (#{phoneNum}, #{password}, #{nickname}, #{birthday}, #{gender});
+    </insert>
+
+    <update id="update"
+            parameterType="MemberEntity"
+            useGeneratedKeys="true"
+            keyProperty="memberId"
+            keyColumn="member_id">
+        UPDATE member
+           SET phone_num = #{phoneNum},
+               password = #{password},
+               nickname = #{nickname},
+               birthday = #{birthday},
+               gender = #{gender}
+        WHERE member_id = #{memberId};
+    </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM member
+         WHERE member_id = #{memberId}
+    </delete>
+
+    <select id="selectByPhoneNumber"
+            resultType="MemberEntity">
+        SELECT member_id, phone_num, password, nickname,
+               birthday, gender, auto_login_yn, join_date, withdrawal_date
+          FROM member
+         WHERE phone_num = #{phoneNum}
     </select>
 
 </mapper>

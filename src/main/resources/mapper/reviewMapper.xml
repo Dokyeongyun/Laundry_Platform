@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.ReviewRepository">
+
+    <insert id="insert"
+            parameterType="ReviewEntity"
+            useGeneratedKeys="true"
+            keyProperty="reviewId"
+            keyColumn="review_id">
+        INSERT INTO review (
+               laundry_id, writer_id, rating, contents, visit_date
+               )
+        VALUES (
+               #{laundryId}, #{writerId}, #{rating}, #{contents}, #{visitDate}
+               );
+    </insert>
+
+    <select id="selectById" parameterType="int"
+            resultType="ReviewEntity">
+        SELECT review_id, laundry_id, writer_id, rating,
+               contents, visit_date, create_date, update_date
+          FROM review
+         WHERE review_id = #{reviewId};
+    </select>
+
+    <delete id="deleteById"
+            parameterType="int">
+        DELETE
+          FROM review
+         WHERE review_id = #{reviewId};
+    </delete>
+
+</mapper>

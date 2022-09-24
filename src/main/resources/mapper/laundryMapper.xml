@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coders.laundry.repository.LaundryRepository">
+
+    <resultMap id="searchedLaundryMap" type="LaundryEntity">
+        <result column="laundry_id" property="laundryId"/>
+        <result column="name" property="name"/>
+        <result column="jibun_address" property="jibunAddress"/>
+        <result column="jibun_address_detail" property="jibunAddressDetail"/>
+        <result column="doro_address" property="doroAddress"/>
+        <result column="doro_address_detail" property="doroAddressDetail"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="partnership" property="partnership"/>
+        <result column="thumbnailImage" property="thumbnailImage"/>
+        <result column="rating_point" property="ratingPoint"/>
+        <result column="review_count" property="reviewCount"/>
+        <result column="distance" property="distance"/>
+        <result column="laundry_like" property="like"/>
+        <collection property="tags" column="laundry_id" ofType="String" select="selectLaundryTagsById"/>
+    </resultMap>
+
     <insert id="insert"
             parameterType="LaundryEntity"
             useGeneratedKeys="true"
@@ -17,7 +36,8 @@
         );
     </insert>
 
-    <select id="selectById" parameterType="int" resultType="LaundryEntity">
+    <select id="selectById" parameterType="int"
+            resultType="LaundryEntity">
         SELECT laundry_id, name, jibun_address, jibun_address_detail,
                doro_address, doro_address_detail,
                latitude, longitude, partnership
@@ -49,10 +69,123 @@
          WHERE laundry_id = #{laundryId}
     </delete>
 
-    <select id="selectAll" resultType="LaundryEntity">
+    <select id="selectAll"
+            resultType="LaundryEntity">
         SELECT laundry_id, name, jibun_address, jibun_address_detail,
                doro_address, doro_address_detail,
                latitude, longitude, partnership
           FROM laundry
+    </select>
+
+    <select id="selectAddressSearchListCount"
+            resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+          FROM (
+               SELECT ST_DistanceSphere(
+                          ST_PointFromText('POINT(' || #{locationSearch.baseLocation.longitude} || ' '
+                                           || #{locationSearch.baseLocation.latitude} || ')', 4326),
+                          ST_PointFromText('POINT(' || longitude || ' ' || latitude || ')', 4326)
+                      ) AS distance
+                 FROM laundry
+                WHERE (jibun_address LIKE '%' || #{keyword} || '%'
+                      OR doro_address LIKE '%' || #{keyword} || '%')
+               )
+         WHERE distance <= #{locationSearch.radius}
+        ]]>
+    </select>
+
+    <select id="selectAddressSearchList"
+            resultMap="searchedLaundryMap">
+        <![CDATA[
+        SELECT laundry_id, name, jibun_address, jibun_address_detail,
+               doro_address, doro_address_detail,
+               latitude, longitude, partnership,
+               distance,
+               (SELECT CASE COUNT(*)
+                       WHEN 0 THEN false
+                       ELSE true END
+                  FROM laundry_like
+                 WHERE member_id = #{memberId}
+                   AND laundry_id = l1.laundry_id
+               ) AS laundry_like
+          FROM (SELECT laundry_id, name, jibun_address, jibun_address_detail,
+                       doro_address, doro_address_detail,
+                       latitude, longitude, partnership,
+                       ST_DistanceSphere(
+                          ST_PointFromText('POINT(' || #{locationSearch.baseLocation.longitude} || ' '
+                                           || #{locationSearch.baseLocation.latitude} || ')', 4326),
+                          ST_PointFromText('POINT(' || longitude || ' ' || latitude || ')', 4326)
+                       ) AS distance
+                  FROM laundry
+                 WHERE (jibun_address LIKE '%' || #{keyword} || '%'
+                       OR doro_address LIKE '%' || #{keyword} || '%')
+               ) AS l1
+         WHERE distance <= #{locationSearch.radius}
+         LIMIT #{pageable.limit}
+        OFFSET #{pageable.offset}
+        ]]>
+    </select>
+
+    <select id="selectKeywordSearchListCount"
+            resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+          FROM (
+               SELECT ST_DistanceSphere(
+                          ST_PointFromText('POINT(' || #{locationSearch.baseLocation.longitude} || ' '
+                                           || #{locationSearch.baseLocation.latitude} || ')', 4326),
+                          ST_PointFromText('POINT(' || longitude || ' ' || latitude || ')', 4326)
+                      ) AS distance
+                 FROM laundry
+                WHERE (jibun_address LIKE '%' || #{keyword} || '%'
+                      OR doro_address LIKE '%' || #{keyword} || '%'
+                      OR name LIKE '%' || #{keyword} || '%')
+               )
+         WHERE distance <= #{locationSearch.radius}
+        ]]>
+    </select>
+
+    <select id="selectKeywordSearchList"
+            resultMap="searchedLaundryMap">
+        <![CDATA[
+        SELECT laundry_id, name, jibun_address, jibun_address_detail,
+               doro_address, doro_address_detail,
+               latitude, longitude, partnership,
+               distance,
+               (SELECT CASE COUNT(*)
+                       WHEN 0 THEN false
+                       ELSE true END
+                  FROM laundry_like
+                 WHERE member_id = #{memberId}
+                   AND laundry_id = l1.laundry_id
+               ) AS laundry_like
+          FROM (SELECT laundry_id, name, jibun_address, jibun_address_detail,
+                       doro_address, doro_address_detail,
+                       latitude, longitude, partnership,
+                       ST_DistanceSphere(
+                          ST_PointFromText('POINT(' || #{locationSearch.baseLocation.longitude} || ' '
+                                           || #{locationSearch.baseLocation.latitude} || ')', 4326),
+                          ST_PointFromText('POINT(' || longitude || ' ' || latitude || ')', 4326)
+                       ) AS distance
+                  FROM laundry
+                 WHERE (jibun_address LIKE '%' || #{keyword} || '%'
+                       OR doro_address LIKE '%' || #{keyword} || '%'
+                       OR name LIKE '%' || #{keyword} || '%')
+               ) AS l1
+         WHERE distance <= #{locationSearch.radius}
+         LIMIT #{pageable.limit}
+        OFFSET #{pageable.offset}
+        ]]>
+    </select>
+
+    <!-- TODO implement -->
+    <select id="selectLaundryTagsById" parameterType="int"
+            resultType="string">
+        SELECT '상위10%' AS tags
+         UNION ALL
+        SELECT '신규' AS tags
+         UNION ALL
+        SELECT '테스트' AS tags
     </select>
 </mapper>

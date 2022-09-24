@@ -6,7 +6,7 @@ CREATE TABLE member (
        PRIMARY KEY (member_id),
        member_id        INT         NOT NULL AUTO_INCREMENT,
        phone_num        CHAR(11)    NOT NULL UNIQUE,
-       password         VARCHAR(50) NOT NULL,
+       password         VARCHAR(100) NOT NULL,
        nickname         VARCHAR(10) NOT NULL,
        birthday         DATE,
        gender           CHAR(1),
@@ -26,8 +26,8 @@ CREATE TABLE laundry_visit_history(
 
 CREATE TABLE laundry_like(
         PRIMARY KEY(laundry_like_id),
-        laundry_like_id   INT     NOT NULL AUTO_INCREMENT,
-        member_id         INT     NOT NULL,
-        laundry_id        INT     NOT NULL,
-        like_date         INT     NOT NULL DEFAULT CURRENT_TIMESTAMP
+        laundry_like_id   INT         NOT NULL AUTO_INCREMENT,
+        member_id         INT         NOT NULL,
+        laundry_id        INT         NOT NULL,
+        like_date         TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

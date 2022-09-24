@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coders.laundry.repository.LaundryLikeRepository">
+    <insert id="insert"
+            parameterType="LaundryLikeEntity"
+            useGeneratedKeys="true"
+            keyProperty="laundryLikeId"
+            keyColumn="laundry_like_id">
+        INSERT INTO laundry_like(member_id, laundry_id)
+        VALUES (#{memberId}, #{laundryId});
+    </insert>
+
+    <select id="selectById"
+            parameterType="int"
+            resultType="LaundryLikeEntity">
+        SELECT laundry_like_id, member_id, laundry_id, like_date
+          FROM laundry_like
+         WHERE laundry_like_id = #{laundryLikeId}
+    </select>
+
+    <update id="update"
+            parameterType="LaundryLikeEntity"
+            useGeneratedKeys="true"
+            keyProperty="laundryLikeId"
+            keyColumn="laundry_like_id">
+        UPDATE laundry_like
+           SET member_id = #{memberId},
+               laundry_id = #{laundryId}
+         WHERE laundry_like_id = #{laundryLikeId}
+    </update>
+
+    <delete id="delete"
+            parameterType="int">
+        DELETE
+          FROM laundry_like
+         WHERE laundry_like_id = #{laundryLikeId}
+    </delete>
+</mapper>

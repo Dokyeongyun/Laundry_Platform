@@ -1,6 +1,9 @@
 package com.coders.laundry.repository;
 
 import com.coders.laundry.domain.entity.LaundryEntity;
+import com.coders.laundry.dto.LocationSearch;
+import com.coders.laundry.dto.Pageable;
+import com.coders.laundry.dto.Point;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -116,5 +119,65 @@ class LaundryRepositoryTest {
 
         // Assert
         assertNotNull(result);
+    }
+
+    @Test
+    void selectAddressSearchListCount() {
+        // Arrange
+        String keyword = "경기도";
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+
+        // Act
+        int result = laundryRepository.selectAddressSearchListCount(keyword, locationSearch);
+
+        // Assert
+        assertTrue(result >= 0);
+    }
+
+    @Test
+    void selectAddressSearchList() {
+        // Arrange
+        int memberId = 1;
+        String keyword = "경기도";
+        LocationSearch locationSearch = new LocationSearch(new Point(37.3467219612, 126.6894764563), 10000);
+        Pageable pageable = new Pageable(0, 3, "review", "desc");
+
+        // Act
+        List<LaundryEntity> result
+                = laundryRepository.selectAddressSearchList(memberId, keyword, locationSearch, pageable);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.size() <= pageable.getLimit());
+    }
+
+    @Test
+    void selectKeywordSearchListCount() {
+        // Arrange
+        String keyword = "크리닝";
+        LocationSearch locationSearch = new LocationSearch(new Point(37.6494184000, 127.2478329000), 20000);
+
+        // Act
+        int result = laundryRepository.selectKeywordSearchListCount(keyword, locationSearch);
+
+        // Assert
+        assertTrue(result >= 0);
+    }
+
+    @Test
+    void selectKeywordSearchList() {
+        // Arrange
+        int memberId = 1;
+        String keyword = "크리닝";
+        LocationSearch locationSearch = new LocationSearch(new Point(37.6494184000, 127.2478329000), 20000);
+        Pageable pageable = new Pageable(0, 3, "review", "desc");
+
+        // Act
+        List<LaundryEntity> result
+                = laundryRepository.selectAddressSearchList(memberId, keyword, locationSearch, pageable);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.size() <= pageable.getLimit());
     }
 }

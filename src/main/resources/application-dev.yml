@@ -15,3 +15,8 @@ spring:
 # data
 data:
   laundry: classpath:data/laundry*.json
+
+jwt:
+  secretKey: laundryJwtSecret
+  accessValidTime: 3600000
+  refreshValidTime: 86400000
